@@ -1,0 +1,234 @@
+@startuml
+class Role {
+- {static} long serialVersionUID
+- Long id
+- String roleName
+- String roleUid
+- Set<UniUser> uniUsers
++ Long getId()
++ void setId(Long)
++ String getRoleName()
++ void setRoleName(String)
++ String getRoleUid()
++ void setRoleUid(String)
++ Set<UniUser> getUniUsers()
++ Role addUniUser(UniUser)
++ Role removeUniUser(UniUser)
++ void setUniUsers(Set<UniUser>)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+note top of Role: Rolle eines Benutzers (z.B. Admin, Dozent, Student im System)
+class Course {
+- {static} long serialVersionUID
+- Long id
+- String courseName
+- LocalDate startDate
+- LocalDate endDate
+- Set<Lecture> lectures
+- Set<Semester> semesters
+- DegreeProgram degreeProgram
++ Long getId()
++ void setId(Long)
++ String getCourseName()
++ void setCourseName(String)
++ LocalDate getStartDate()
++ void setStartDate(LocalDate)
++ LocalDate getEndDate()
++ void setEndDate(LocalDate)
++ Set<Lecture> getLectures()
++ Course addLecture(Lecture)
++ Course removeLecture(Lecture)
++ void setLectures(Set<Lecture>)
++ Set<Semester> getSemesters()
++ Course addSemester(Semester)
++ Course removeSemester(Semester)
++ void setSemesters(Set<Semester>)
++ DegreeProgram getDegreeProgram()
++ void setDegreeProgram(DegreeProgram)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+note right of Course: Kurs an der Hochschule (z.B. WWI2020H)
+
+class Lecturer {
+- {static} long serialVersionUID
+- Long id
+- String firstName
+- String lastName
+- String email
+- Set<LectureDate> lectureDates
+- Set<Lecture> lectures
++ Long getId()
++ void setId(Long)
++ String getFirstName()
++ void setFirstName(String)
++ String getLastName()
++ void setLastName(String)
++ String getEmail()
++ void setEmail(String)
++ Set<LectureDate> getLectureDates()
++ Lecturer addLectureDate(LectureDate)
++ Lecturer removeLectureDate(LectureDate)
++ void setLectureDates(Set<LectureDate>)
++ Set<Lecture> getLectures()
++ Lecturer addLecture(Lecture)
++ Lecturer removeLecture(Lecture)
++ void setLectures(Set<Lecture>)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+note right of Lecturer: Dozent an der Hochschule
+class Semester {
+- {static} long serialVersionUID
+- Long id
+- Integer number
+- LocalDate startDate
+- LocalDate endDate
+- Long semesterNumber
+- String name
+- Course course
++ Long getId()
++ void setId(Long)
++ Integer getNumber()
++ void setNumber(Integer)
++ LocalDate getStartDate()
++ void setStartDate(LocalDate)
++ LocalDate getEndDate()
++ void setEndDate(LocalDate)
++ Long getSemesterNumber()
++ void setSemesterNumber(Long)
++ String getName()
++ void setName(String)
++ Course getCourse()
++ void setCourse(Course)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+class UniUser {
+- {static} long serialVersionUID
+- Long id
+- String firstName
+- String lastName
+- String shibbolethId
+- Set<Role> roles
++ Long getId()
++ void setId(Long)
++ String getFirstName()
++ UniUser firstName(String)
++ void setFirstName(String)
++ String getLastName()
++ UniUser lastName(String)
++ void setLastName(String)
++ String getShibbolethId()
++ UniUser shibbolethId(String)
++ void setShibbolethId(String)
++ Set<Role> getRoles()
++ UniUser roles(Set<Role>)
++ UniUser addRole(Role)
++ UniUser removeRole(Role)
++ void setRoles(Set<Role>)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+note left of UniUser: Benutzer in dem System
+class DegreeProgram {
+- {static} long serialVersionUID
+- Long id
+- String name
+- String shortName
+- Set<Course> courses
++ Long getId()
++ void setId(Long)
++ String getName()
++ void setName(String)
++ String getShortName()
++ void setShortName(String)
++ Set<Course> getCourses()
++ DegreeProgram addCourse(Course)
++ DegreeProgram removeCourse(Course)
++ void setCourses(Set<Course>)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+note left of DegreeProgram: Studiengang (z.B. Wirtschaftsinformatik)
+class Lecture {
+- {static} long serialVersionUID
+- Long id
+- String lectureName
+- String modulName
+- Long duration
+- Set<LectureDate> lectureDates
+- Set<Lecturer> lecturers
+- Course course
++ Long getId()
++ void setId(Long)
++ String getLectureName()
++ void setLectureName(String)
++ String getModulName()
++ void setModulName(String)
++ Long getDuration()
++ void setDuration(Long)
++ Set<LectureDate> getLectureDates()
++ Lecture addLectureDate(LectureDate)
++ Lecture removeLectureDate(LectureDate)
++ void setLectureDates(Set<LectureDate>)
++ Set<Lecturer> getLecturers()
++ Lecture addLecturer(Lecturer)
++ Lecture removeLecturer(Lecturer)
++ void setLecturers(Set<Lecturer>)
++ Course getCourse()
++ void setCourse(Course)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+note right of Lecture: Vorlesung (z.B. Einführung in die Programmierung)
+class LectureDate {
+- {static} long serialVersionUID
+- Long id
+- LocalDateTime startDate
+- LocalDateTime endDate
+- Lecturer lecturer
+- Lecture lecture
++ Long getId()
++ void setId(Long)
++ LocalDateTime getStartDate()
++ void setStartDate(LocalDateTime)
++ LocalDateTime getEndDate()
++ void setEndDate(LocalDateTime)
++ Lecturer getLecturer()
++ void setLecturer(Lecturer)
++ Lecture getLecture()
++ void setLecture(Lecture)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+note right of LectureDate: Vorlesungstermin
+
+
+'java.io.Serializable <|.. Role
+'java.io.Serializable <|.. Course
+'java.io.Serializable <|.. Lecturer
+'java.io.Serializable <|.. Semester
+'java.io.Serializable <|.. UniUser
+'java.io.Serializable <|.. DegreeProgram
+'java.io.Serializable <|.. Lecture
+'java.io.Serializable <|.. LectureDate
+
+
+Course "0..1" o-- "*" Semester
+Course "0..1" o-- "*" Lecture
+DegreeProgram "0..1" o-- "*" Course
+Lecture "0..1" o-- "*" LectureDate
+Lecture "*" -- "*" Lecturer
+UniUser "0..1" -- "*" Role
+
+@enduml
