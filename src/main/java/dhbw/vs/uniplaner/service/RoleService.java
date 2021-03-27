@@ -1,6 +1,7 @@
 package dhbw.vs.uniplaner.service;
 
 
+import dhbw.vs.uniplaner.domain.Role;
 import dhbw.vs.uniplaner.interfaces.IRoleService;
 import dhbw.vs.uniplaner.repository.RoleRepository;
 import dhbw.vs.uniplaner.domain.Role;
@@ -10,6 +11,7 @@ import dhbw.vs.uniplaner.domain.Role;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +36,6 @@ public class RoleService implements IRoleService {
         return roleRepository.save(role);
     }
 
-
     @Override
     public void delete(Long id) {
         logger.debug("Request to delete Role {}", id);
@@ -51,5 +52,12 @@ public class RoleService implements IRoleService {
     public Optional<Role> findOne(Long id) {
         logger.debug("Request to find Role {}", id);
         return roleRepository.findById(id);
+    }
+
+    @Override
+    public Role update(Role role) {
+        logger.debug("Request to update Role {}",role.getId());
+        Role savedRole = roleRepository.findById(role.getId()).orElseThrow(() -> new ResourceNotFoundException());
+        return roleRepository.save(savedRole);
     }
 }

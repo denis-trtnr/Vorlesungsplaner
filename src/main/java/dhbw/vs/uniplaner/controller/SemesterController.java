@@ -1,17 +1,18 @@
 package dhbw.vs.uniplaner.controller;
 
 import dhbw.vs.uniplaner.domain.Semester;
-import dhbw.vs.uniplaner.service.SemesterService;
+import dhbw.vs.uniplaner.interfaces.ISemesterService;
 import dhbw.vs.uniplaner.exception.BadRequestException;
 import dhbw.vs.uniplaner.exception.ResourceNotFoundException;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
-import java.net.URI;
+
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +23,13 @@ public class SemesterController {
 
     private final Logger log = LoggerFactory.getLogger(SemesterController.class);
 
+    @Autowired
+    private ISemesterService semesterService;
 
     @PostMapping("/semesters")
     public ResponseEntity<Semester> createSemester(@RequestBody Semester semester) throws BadRequestException, URISyntaxException {
-
+        semesterService.save(semester);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -39,12 +43,7 @@ public class SemesterController {
      */
     @PutMapping("/semesters")
     public ResponseEntity<Semester> updateSemester(@RequestBody Semester semester) throws  BadRequestException {
-
-    }
-
-    @PutMapping("/semesters/{id}")
-    public ResponseEntity<Semester> updateSemester(@PathVariable(value = "id") Long id,@Valid @RequestBody Semester semesterDetails) throws ResourceNotFoundException {
-
+        return ResponseEntity.ok(semesterService.update(semester));
     }
 
     /**
@@ -53,8 +52,8 @@ public class SemesterController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of semesters in body.
      */
     @GetMapping("/semesters")
-    public List<Semester> getAllsemesters() {
-
+    public ResponseEntity<List<Semester>> getAllsemesters() {
+        return ResponseEntity.ok(semesterService.findAll());
     }
 
     /**
@@ -64,8 +63,8 @@ public class SemesterController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the semester, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/semesters/{id}")
-    public ResponseEntity<Semester> getSemester(@PathVariable Long id) throws ResourceNotFoundException {
-
+    public ResponseEntity<Optional<Semester>> getSemester(@PathVariable Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(semesterService.findOne(id));
     }
         /**
          * {@code DELETE  /semesters/:id} : delete the "id" semester.
@@ -75,7 +74,8 @@ public class SemesterController {
          */
         @DeleteMapping("/semesters/{id}")
         public ResponseEntity<Void> deleteSemester(@PathVariable Long id) {
-
+            semesterService.delete(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
 

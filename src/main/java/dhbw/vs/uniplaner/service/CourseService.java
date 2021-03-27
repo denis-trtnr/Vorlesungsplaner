@@ -1,6 +1,7 @@
 package dhbw.vs.uniplaner.service;
 
 
+import dhbw.vs.uniplaner.exception.BadRequestException;
 import dhbw.vs.uniplaner.interfaces.ICourseService;
 import dhbw.vs.uniplaner.repository.CourseRepository;
 import dhbw.vs.uniplaner.domain.Course;
@@ -10,6 +11,8 @@ import dhbw.vs.uniplaner.domain.Course;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +37,6 @@ public class CourseService implements ICourseService {
         return courseRepository.save(course);
     }
 
-
     @Override
     public void delete(Long id) {
         logger.debug("Request to delete Course {}", id);
@@ -51,5 +53,12 @@ public class CourseService implements ICourseService {
     public Optional<Course> findOne(Long id) {
         logger.debug("Request to find Course {}", id);
         return courseRepository.findById(id);
+    }
+
+    @Override
+    public Course update(Course course) {
+        logger.debug("Request to update Course {}",course.getId());
+        Course savedCourse = courseRepository.findById(course.getId()).orElseThrow(() -> new ResourceNotFoundException());
+        return courseRepository.save(savedCourse);
     }
 }

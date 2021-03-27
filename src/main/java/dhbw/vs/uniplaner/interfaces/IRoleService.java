@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.interfaces;
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.Role;
 
 import dhbw.vs.uniplaner.interfaces.IRoleService;
@@ -22,4 +23,6 @@ public interface IRoleService {
     public List<Role> findAll();
 
     public Optional<Role> findOne(Long id);
+
+    public Role update(Role role);
 }

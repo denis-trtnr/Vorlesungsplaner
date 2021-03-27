@@ -1,6 +1,7 @@
 package dhbw.vs.uniplaner.service;
 
 
+import dhbw.vs.uniplaner.domain.Semester;
 import dhbw.vs.uniplaner.interfaces.ISemesterService;
 import dhbw.vs.uniplaner.repository.SemesterRepository;
 import dhbw.vs.uniplaner.domain.Semester;
@@ -10,6 +11,7 @@ import dhbw.vs.uniplaner.domain.Semester;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +36,6 @@ public class SemesterService implements ISemesterService {
         return semesterRepository.save(semester);
     }
 
-
     @Override
     public void delete(Long id) {
         logger.debug("Request to delete Semester {}", id);
@@ -51,5 +52,12 @@ public class SemesterService implements ISemesterService {
     public Optional<Semester> findOne(Long id) {
         logger.debug("Request to find Semester {}", id);
         return semesterRepository.findById(id);
+    }
+
+    @Override
+    public Semester update(Semester semester) {
+        logger.debug("Request to update Semester {}",semester.getId());
+        Semester savedSemester = semesterRepository.findById(semester.getId()).orElseThrow(() -> new ResourceNotFoundException());
+        return semesterRepository.save(savedSemester);
     }
 }

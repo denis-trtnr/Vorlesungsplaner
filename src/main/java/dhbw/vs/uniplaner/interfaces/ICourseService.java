@@ -22,4 +22,6 @@ public interface ICourseService {
     public List<Course> findAll();
 
     public Optional<Course> findOne(Long id);
+
+    public Course update(Course course);
 }

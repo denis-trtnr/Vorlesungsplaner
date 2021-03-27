@@ -1,6 +1,8 @@
 package dhbw.vs.uniplaner.service;
 
 
+import dhbw.vs.uniplaner.domain.Course;
+import dhbw.vs.uniplaner.domain.Lecture;
 import dhbw.vs.uniplaner.interfaces.ILecturerService;
 import dhbw.vs.uniplaner.repository.LecturerRepository;
 import dhbw.vs.uniplaner.domain.Lecturer;
@@ -10,6 +12,7 @@ import dhbw.vs.uniplaner.domain.Lecturer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +37,6 @@ public class LecturerService implements ILecturerService {
         return lecturerRepository.save(lecturer);
     }
 
-
     @Override
     public void delete(Long id) {
         logger.debug("Request to delete Lecturer {}", id);
@@ -51,5 +53,12 @@ public class LecturerService implements ILecturerService {
     public Optional<Lecturer> findOne(Long id) {
         logger.debug("Request to find Lecturer {}", id);
         return lecturerRepository.findById(id);
+    }
+
+    @Override
+    public Lecturer update(Lecturer lecturer) {
+        logger.debug("Request to update Lecturer {}",lecturer.getId());
+        Lecturer savedLecturer = lecturerRepository.findById(lecturer.getId()).orElseThrow(() -> new ResourceNotFoundException());
+        return lecturerRepository.save(savedLecturer);
     }
 }

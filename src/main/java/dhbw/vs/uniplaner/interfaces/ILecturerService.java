@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.interfaces;
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.Lecturer;
 
 import dhbw.vs.uniplaner.interfaces.ILecturerService;
@@ -22,4 +23,6 @@ public interface ILecturerService {
     public List<Lecturer> findAll();
 
     public Optional<Lecturer> findOne(Long id);
+
+    public Lecturer update(Lecturer lecturer);
 }

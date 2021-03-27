@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.interfaces;
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.Lecture;
 
 import dhbw.vs.uniplaner.interfaces.ILectureService;
@@ -22,4 +23,6 @@ public interface ILectureService {
     public List<Lecture> findAll();
 
     public Optional<Lecture> findOne(Long id);
+
+    public Lecture update(Lecture lecture);
 }

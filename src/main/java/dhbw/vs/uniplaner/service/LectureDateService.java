@@ -1,6 +1,8 @@
 package dhbw.vs.uniplaner.service;
 
 
+import dhbw.vs.uniplaner.domain.Course;
+import dhbw.vs.uniplaner.domain.Lecture;
 import dhbw.vs.uniplaner.interfaces.ILectureDateService;
 import dhbw.vs.uniplaner.repository.LectureDateRepository;
 import dhbw.vs.uniplaner.domain.LectureDate;
@@ -10,6 +12,7 @@ import dhbw.vs.uniplaner.domain.LectureDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,5 +54,12 @@ public class LectureDateService implements ILectureDateService {
     public Optional<LectureDate> findOne(Long id) {
         logger.debug("Request to find LectureDate {}", id);
         return lecturedateRepository.findById(id);
+    }
+
+    @Override
+    public LectureDate update(LectureDate lectureDate) {
+        logger.debug("Request to update Lecture {}",lectureDate.getId());
+        LectureDate savedLectureDate = lecturedateRepository.findById(lectureDate.getId()).orElseThrow(() -> new ResourceNotFoundException());
+        return lecturedateRepository.save(savedLectureDate);
     }
 }

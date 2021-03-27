@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.interfaces;
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.DegreeProgram;
 
 import dhbw.vs.uniplaner.interfaces.IDegreeProgramService;
@@ -22,4 +23,6 @@ public interface IDegreeProgramService {
     public List<DegreeProgram> findAll();
 
     public Optional<DegreeProgram> findOne(Long id);
+
+    public DegreeProgram update(DegreeProgram degreeProgram);
 }

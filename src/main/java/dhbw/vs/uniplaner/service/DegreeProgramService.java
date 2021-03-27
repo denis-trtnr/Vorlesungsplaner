@@ -1,6 +1,7 @@
 package dhbw.vs.uniplaner.service;
 
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.interfaces.IDegreeProgramService;
 import dhbw.vs.uniplaner.repository.DegreeProgramRepository;
 import dhbw.vs.uniplaner.domain.DegreeProgram;
@@ -10,6 +11,7 @@ import dhbw.vs.uniplaner.domain.DegreeProgram;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,5 +53,12 @@ public class DegreeProgramService implements IDegreeProgramService {
     public Optional<DegreeProgram> findOne(Long id) {
         logger.debug("Request to find DegreeProgram {}", id);
         return degreeprogramRepository.findById(id);
+    }
+
+    @Override
+    public DegreeProgram update(DegreeProgram degreeProgram) {
+        logger.debug("Request to update Degree program {}",degreeProgram.getId());
+        DegreeProgram savedDegreeProgram = degreeprogramRepository.findById(degreeProgram.getId()).orElseThrow(() -> new ResourceNotFoundException());
+        return degreeprogramRepository.save(savedDegreeProgram);
     }
 }

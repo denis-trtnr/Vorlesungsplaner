@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.interfaces;
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.Semester;
 
 import dhbw.vs.uniplaner.interfaces.ISemesterService;
@@ -22,4 +23,6 @@ public interface ISemesterService {
     public List<Semester> findAll();
 
     public Optional<Semester> findOne(Long id);
+
+    public Semester update(Semester semester);
 }

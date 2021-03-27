@@ -1,17 +1,18 @@
 package dhbw.vs.uniplaner.controller;
 
 import dhbw.vs.uniplaner.domain.Role;
-import dhbw.vs.uniplaner.service.RoleService;
+import dhbw.vs.uniplaner.interfaces.IRoleService;
 import dhbw.vs.uniplaner.exception.BadRequestException;
 import dhbw.vs.uniplaner.exception.ResourceNotFoundException;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
-import java.net.URI;
+
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +23,13 @@ public class RoleController {
 
     private final Logger log = LoggerFactory.getLogger(RoleController.class);
 
+    @Autowired
+    private IRoleService roleService;
 
     @PostMapping("/roles")
     public ResponseEntity<Role> createRole(@RequestBody Role role) throws BadRequestException, URISyntaxException {
-
+        roleService.save(role);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -39,12 +43,7 @@ public class RoleController {
      */
     @PutMapping("/roles")
     public ResponseEntity<Role> updateRole(@RequestBody Role role) throws  BadRequestException {
-
-    }
-
-    @PutMapping("/roles/{id}")
-    public ResponseEntity<Role> updateRole(@PathVariable(value = "id") Long id,@Valid @RequestBody Role roleDetails) throws ResourceNotFoundException {
-
+        return ResponseEntity.ok(roleService.update(role));
     }
 
     /**
@@ -53,8 +52,8 @@ public class RoleController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of roles in body.
      */
     @GetMapping("/roles")
-    public List<Role> getAllroles() {
-
+    public ResponseEntity<List<Role>> getAllroles() {
+        return ResponseEntity.ok(roleService.findAll());
     }
 
     /**
@@ -64,8 +63,8 @@ public class RoleController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the role, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/roles/{id}")
-    public ResponseEntity<Role> getRole(@PathVariable Long id) throws ResourceNotFoundException {
-
+    public ResponseEntity<Optional<Role>> getRole(@PathVariable Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(roleService.findOne(id));
     }
         /**
          * {@code DELETE  /roles/:id} : delete the "id" role.
@@ -75,7 +74,8 @@ public class RoleController {
          */
         @DeleteMapping("/roles/{id}")
         public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
-
+            roleService.delete(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
 
