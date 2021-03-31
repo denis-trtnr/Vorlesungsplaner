@@ -3,8 +3,12 @@ package dhbw.vs.uniplaner;
 
 import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.Lecture;
+import dhbw.vs.uniplaner.domain.Role;
+import dhbw.vs.uniplaner.domain.UniUser;
 import dhbw.vs.uniplaner.repository.CourseRepository;
 import dhbw.vs.uniplaner.repository.LectureRepository;
+import dhbw.vs.uniplaner.repository.RoleRepository;
+import dhbw.vs.uniplaner.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +21,10 @@ public class UniplanerApplication implements CommandLineRunner {
 	private CourseRepository courseRepository;
 	@Autowired
 	private LectureRepository lectureRepository;
-
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private RoleRepository roleRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(UniplanerApplication.class, args);
@@ -34,9 +41,9 @@ public class UniplanerApplication implements CommandLineRunner {
 		lecture.setDuration(53L);
 		lecture =lectureRepository.save(lecture);
 		System.out.println("lecture="+ lecture.toString());
-
-
-
+		Role role = new Role();
+		role.setRoleName("ROLE_USER");
+		roleRepository.save(role);
 	}
 
 }

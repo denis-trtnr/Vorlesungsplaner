@@ -25,10 +25,7 @@ public class DegreeProgram implements Serializable {
     @Column(name = "shortName")
     private String shortName;
 
-    @OneToMany
-    @JoinTable(name = "degreeProgramm_courses",
-            joinColumns = @JoinColumn(name = "degree_program_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
+    @OneToMany(mappedBy = "degreeProgram",cascade = CascadeType.ALL)
     private Set<Course> courses = new HashSet<>();
 
     public Long getId() {

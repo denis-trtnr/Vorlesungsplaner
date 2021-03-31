@@ -26,10 +26,12 @@ public class LectureDate implements Serializable {
     @Column(name = "endDate")
     private LocalDate endDate;
 
-    @ManyToOne
-    private Lecturer lecturer;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="lecturers_id")
+    private Lecturer lecturers;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="lecture_id")
     private Lecture lecture;
 
     public Long getId() {
@@ -57,11 +59,11 @@ public class LectureDate implements Serializable {
     }
 
     public Lecturer getLecturer() {
-        return lecturer;
+        return lecturers;
     }
 
     public void setLecturer(Lecturer lecturer) {
-        this.lecturer = lecturer;
+        this.lecturers = lecturer;
     }
 
     public Lecture getLecture() {

@@ -34,7 +34,8 @@ public class Semester implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="course_id")
     private Course course;
 
     public Long getId() {

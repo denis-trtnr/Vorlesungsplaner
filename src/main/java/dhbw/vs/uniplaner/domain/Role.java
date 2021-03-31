@@ -26,8 +26,14 @@ public class Role implements Serializable {
     @Column(name = "roleUid")
     private String roleUid;
 
-    @ManyToOne
+    /*
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "uni_user_id", referencedColumnName = "id")
     private UniUser uniUser;
+*/
+    @ManyToMany(mappedBy = "roles",fetch = FetchType.EAGER)
+    private Set<UniUser> uniUsers = new HashSet<>();
+
 
     public Long getId() {
         return id;
@@ -53,12 +59,24 @@ public class Role implements Serializable {
         this.roleUid = roleUid;
     }
 
-    public UniUser getUniUser() {
-        return uniUser;
+    public Set<UniUser> getUniUsers() {
+        return uniUsers;
     }
 
-    public void setUniUser(UniUser uniUser) {
-        this.uniUser = uniUser;
+    public void setUniUsers(Set<UniUser> uniUsers) {
+        this.uniUsers = uniUsers;
+    }
+
+    public Role addUser(UniUser user) {
+        this.uniUsers.add(user);
+        user.getRoles().add(this);
+        return this;
+    }
+
+    public Role removeUser(UniUser user) {
+        this.uniUsers.remove(user);
+        user.getRoles().remove(this);
+        return this;
     }
 
     @Override

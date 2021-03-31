@@ -29,10 +29,7 @@ public class Lecturer implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @OneToMany
-    @JoinTable(name = "lecturer_lecture_date",
-            joinColumns = @JoinColumn(name = "lecturer_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "lecture_date_id", referencedColumnName = "id"))
+    @OneToMany(mappedBy = "lecturers",cascade = CascadeType.ALL)
     private Set<LectureDate> lectureDates = new HashSet<>();
 
     @ManyToMany

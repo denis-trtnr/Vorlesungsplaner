@@ -25,16 +25,25 @@ public class UniUser implements Serializable {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "shibboleth_id")
     private String shibbolethId;
 
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(name = "uni_user_role",
                joinColumns = @JoinColumn(name = "uni_user_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
 
-
+    /*
+    @OneToMany
+    private Set<Role> roles = new HashSet<>();
+*/
     public Long getId() {
         return id;
     }
@@ -69,6 +78,22 @@ public class UniUser implements Serializable {
         this.lastName = lastName;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getShibbolethId() {
         return shibbolethId;
     }
@@ -93,13 +118,13 @@ public class UniUser implements Serializable {
 
     public UniUser addRole(Role role) {
         this.roles.add(role);
-        role.setUniUser(this);
+        role.getUniUsers().add(this);
         return this;
     }
 
     public UniUser removeRole(Role role) {
         this.roles.remove(role);
-        role.setUniUser(null);
+        role.getUniUsers().remove(this);
         return this;
     }
 
@@ -131,6 +156,8 @@ public class UniUser implements Serializable {
             "id=" + getId() +
             ", firstName='" + getFirstName() + "'" +
             ", lastName='" + getLastName() + "'" +
+            ", password='"+ getPassword() + "'" +
+            ", mail='"+ getEmail() + "'" +
             ", shibbolethId='" + getShibbolethId() + "'" +
             "}";
     }

@@ -30,20 +30,15 @@ public class Lecture implements Serializable {
     @Column(name = "duration")
     private Long duration;
 
-    @ManyToMany
-    @JoinTable(name = "lecture_lectureDates",
-            joinColumns = @JoinColumn(name = "lecture_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "lectureDates_id", referencedColumnName = "id"))
+    @OneToMany(mappedBy = "lecture",cascade = CascadeType.ALL)
     private Set<LectureDate> lectureDates = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "lecture_lecturer",
-            joinColumns = @JoinColumn(name = "lecture_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "lecturer_id", referencedColumnName = "id"))
+    @ManyToMany(mappedBy = "lectures",fetch = FetchType.EAGER)
     private Set<Lecturer> lecturers = new HashSet<>();
 
-    @ManyToOne
-    private Course course;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="course_id")
+    private Course courseLecture;
 
     public Long getId() {
         return id;
@@ -118,11 +113,11 @@ public class Lecture implements Serializable {
     }
 
     public Course getCourse() {
-        return course;
+        return courseLecture;
     }
 
     public void setCourse(Course course) {
-        this.course = course;
+        this.courseLecture = course;
     }
 
     @Override

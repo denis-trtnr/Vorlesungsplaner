@@ -31,19 +31,14 @@ public class Course implements Serializable {
     @Column(name = "endDate")
     private LocalDate endDate;
 
-    @OneToMany
-    @JoinTable(name = "course_lecture",
-            joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "lecture_id", referencedColumnName = "id"))
+    @OneToMany(mappedBy = "courseLecture",cascade = CascadeType.ALL)
     private Set<Lecture> lectures = new HashSet<>();
 
-    @OneToMany
-    @JoinTable(name = "course_semester",
-            joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "semester_id", referencedColumnName = "id"))
+    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL)
     private Set<Semester> semesters = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="degreeProgram_id")
     private DegreeProgram degreeProgram;
 
     public Long getId() {
