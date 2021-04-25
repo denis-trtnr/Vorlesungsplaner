@@ -36,6 +36,12 @@ public class UniplanerApplication implements CommandLineRunner {
 		course.setStartingYear(2022L);
 		course = courseRepository.save(course);
 		System.out.println("course="+ course.toString());
+		Course course2 = new Course();
+		course2.setCourseName("WWI2022G");
+		course2.setStartingYear(2021L);
+		course2 = courseRepository.save(course2);
+		System.out.println("course="+ course2.toString());
+
 		Lecture lecture = new Lecture();
 		lecture.setLectureName("Einführung");
 		lecture.setDuration(53L);

@@ -1,8 +1,7 @@
-package dhbw.vs.uniplaner.controller;
+package dhbw.vs.uniplaner.controller.REST;
 
 import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.interfaces.ICourseService;
-import dhbw.vs.uniplaner.service.CourseService;
 import dhbw.vs.uniplaner.exception.BadRequestException;
 import dhbw.vs.uniplaner.exception.ResourceNotFoundException;
 
@@ -13,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
@@ -70,17 +69,17 @@ public class CourseController {
         return ResponseEntity.ok(courseService.findOne(id));
     }
 
-        /**
-         * {@code DELETE  /courses/:id} : delete the "id" course.
-         *
-         * @param id the id of the course to delete.
-         * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
-         */
-        @DeleteMapping("/courses/{id}")
-        public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
-            courseService.delete(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
+    /**
+     * {@code DELETE  /courses/:id} : delete the "id" course.
+     *
+     * @param id the id of the course to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping("/courses/{id}")
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
+        courseService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 
 

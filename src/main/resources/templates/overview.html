@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adminboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+
+<h1>Overview</h1>
+<!--<div class="row">-->
+<!--    <div class = "col-md-6">-->
+<!--        <button th:each="course : ${courses}" th:text="${course.courseName}" type="button" class="btn btn-primary"></button>-->
+<!--    </div>-->
+<!--</div>-->
+<form action="#" th:action="@{/save-degreeprogram}" th:object="${degreeprogram}" method="post" >
+    <div class="form-group">
+        <label for="namedegreeprogramm">Name des Degreeprograms</label>
+        <input type="text" class="form-control" id="namedegreeprogramm" placeholder="Enter Degreeprogram name" th:field="*{name}">
+        <label for="namedegreeprogrammshrt">Kurzer Name des Degreeprograms</label>
+        <input type="text" class="form-control" id="namedegreeprogrammshrt" placeholder="Enter short Degreeprogram name" th:field="*{shortName}">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+<div th:each="program : ${programs}" >
+    <a th:text="${program.name}" th:href="@{/programOverview/{id} (id=${program.id})} "></a>
+    <h1 th:text="${program}"></h1>
+</div>
+
+</body>
+</html>

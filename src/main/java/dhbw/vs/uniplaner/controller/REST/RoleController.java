@@ -1,4 +1,4 @@
-package dhbw.vs.uniplaner.controller;
+package dhbw.vs.uniplaner.controller.REST;
 
 import dhbw.vs.uniplaner.domain.Role;
 import dhbw.vs.uniplaner.interfaces.IRoleService;
