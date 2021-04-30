@@ -1,0 +1,7 @@
+{
+  "name": "Vorlesungsplaner",
+  "version": "1.0.0",
+  "dependencies": {
+    "superagent": "^6.1.0"
+  }
+}
