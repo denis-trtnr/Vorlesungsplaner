@@ -1,6 +1,7 @@
 package dhbw.vs.uniplaner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,9 +26,11 @@ public class Course implements Serializable {
     @Column(name = "courseName")
     private String courseName;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "startDate")
     private LocalDate startDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "endDate")
     private LocalDate endDate;
 
@@ -40,6 +43,17 @@ public class Course implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="degreeProgram_id")
     private DegreeProgram degreeProgram;
+
+
+    private Long degreeProgramID;
+
+    public Long getDegreeProgramID() {
+        return degreeProgramID;
+    }
+
+    public void setDegreeProgramID(Long degreeProgramID) {
+        this.degreeProgramID = degreeProgramID;
+    }
 
     public Long getId() {
         return id;

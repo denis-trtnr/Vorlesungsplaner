@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.controller.thymeleaf;
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.DegreeProgram;
 import dhbw.vs.uniplaner.interfaces.ICourseService;
 import dhbw.vs.uniplaner.interfaces.IDegreeProgramService;
@@ -35,38 +36,15 @@ public class MainController {
         return "user/index";
     }
 
-    @RequestMapping("/overview")
-    public String listCourses(Model model) {
-        model.addAttribute("courses", courseService.findAll());
-        model.addAttribute("programs", degreeProgramService.findAll());
-        DegreeProgram degreeProgram = new DegreeProgram();
-        model.addAttribute("degreeprogram", degreeProgram);
-        return "overview";
-    }
-
-    @PostMapping("/save-degreeprogram")
-    public String saveProjectSubmission(@ModelAttribute DegreeProgram degreeprogram) {
-        degreeProgramService.save(degreeprogram);
-        return "redirect:/overview";
-    }
 
     @RequestMapping("/programOverview/{id}")
     public String programOverview(Model model, @PathVariable("id") Long id) {
         Optional<DegreeProgram> degreeProgram = degreeProgramService.findOne(id);
         degreeProgram.ifPresent(program -> model.addAttribute("program", program));
+        Course course = new Course();
+        model.addAttribute("course", course);
         return "programOverview";
     }
-
-
-
-
-//
-//    @GetMapping("/addDegree")
-//    public String addDegreePrg(Model model) {
-//        DegreeProgram degreeProgram = new DegreeProgram();
-//        model.addAttribute("degreeprogram", degreeProgram);
-//        return "addDegree";
-//    }
 
 
 

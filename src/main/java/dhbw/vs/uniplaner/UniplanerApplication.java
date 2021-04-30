@@ -23,6 +23,8 @@ public class UniplanerApplication implements CommandLineRunner {
 	@Autowired
 	private RoleRepository roleRepository;
 	@Autowired
+	private DegreeProgramRepository degreeProgramRepository;
+	@Autowired
 	private LectureDateRepository lectureDateRepository;
 
 	public static void main(String[] args) {
@@ -31,22 +33,39 @@ public class UniplanerApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		Course course = new Course();
+		Lecture lecture = new Lecture();
+		Course course2 = new Course();
+		DegreeProgram degreeProgram1 = new DegreeProgram();
+		Role role = new Role();
+		DegreeProgram degreeProgram2 = new DegreeProgram();
+
+		degreeProgram1.setName("Wirtschaftsinformatik");
+		degreeProgram1.setShortName("WI");
+		degreeProgram1.addCourse(course);
+		course.setDegreeProgram(degreeProgram1);
+		degreeProgram1.addCourse(course2);
+		course.setDegreeProgram(degreeProgram1);
+		degreeProgram1 = degreeProgramRepository.save(degreeProgram1);
+		System.out.println("dP="+ degreeProgram1.toString());
+		degreeProgram2.setName("Informatik");
+		degreeProgram2.setShortName("Inf");
+		degreeProgram2 = degreeProgramRepository.save(degreeProgram2);
+		System.out.println("dP="+ degreeProgram2.toString());
+
+
 		course.setCourseName("WWI2022H");
 		course.setStartingYear(2022L);
 		course = courseRepository.save(course);
 		System.out.println("course="+ course.toString());
-		Course course2 = new Course();
 		course2.setCourseName("WWI2022G");
 		course2.setStartingYear(2021L);
 		course2 = courseRepository.save(course2);
 		System.out.println("course="+ course2.toString());
 
-		Lecture lecture = new Lecture();
 		lecture.setLectureName("Einführung");
 		lecture.setDuration(53L);
 		lecture =lectureRepository.save(lecture);
 		System.out.println("lecture="+ lecture.toString());
-		Role role = new Role();
 		role.setRoleName("ROLE_USER");
 		roleRepository.save(role);
 
@@ -60,6 +79,7 @@ public class UniplanerApplication implements CommandLineRunner {
 		lectureDate2.setEnd(LocalDateTime.of(2021,Month.APRIL,21,16,30));
 		lectureDate2 = lectureDateRepository.save(lectureDate2);
 		System.out.println("LectureDate2: " + lectureDate2.getStart() + " - " + lectureDate2.getEnd());
+
 	}
 
 }
