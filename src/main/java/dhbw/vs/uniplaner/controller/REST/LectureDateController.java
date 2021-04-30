@@ -46,7 +46,6 @@ public class LectureDateController {
         return ResponseEntity.ok(lectureDateService.update(lecturedate));
     }
 
-
     /**
      * {@code GET  /lecturedates} : get all the lecturedates.
      *

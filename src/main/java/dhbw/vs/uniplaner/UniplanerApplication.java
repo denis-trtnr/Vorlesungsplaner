@@ -1,18 +1,15 @@
 package dhbw.vs.uniplaner;
 
 
-import dhbw.vs.uniplaner.domain.Course;
-import dhbw.vs.uniplaner.domain.Lecture;
-import dhbw.vs.uniplaner.domain.Role;
-import dhbw.vs.uniplaner.domain.UniUser;
-import dhbw.vs.uniplaner.repository.CourseRepository;
-import dhbw.vs.uniplaner.repository.LectureRepository;
-import dhbw.vs.uniplaner.repository.RoleRepository;
-import dhbw.vs.uniplaner.repository.UserRepository;
+import dhbw.vs.uniplaner.domain.*;
+import dhbw.vs.uniplaner.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.time.LocalDateTime;
+import java.time.Month;
 
 @SpringBootApplication
 public class UniplanerApplication implements CommandLineRunner {
@@ -25,6 +22,8 @@ public class UniplanerApplication implements CommandLineRunner {
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
+	@Autowired
+	private LectureDateRepository lectureDateRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(UniplanerApplication.class, args);
@@ -50,6 +49,17 @@ public class UniplanerApplication implements CommandLineRunner {
 		Role role = new Role();
 		role.setRoleName("ROLE_USER");
 		roleRepository.save(role);
+
+		LectureDate lectureDate = new LectureDate();
+		lectureDate.setStart(LocalDateTime.of(2021, Month.APRIL,23,9,0));
+		lectureDate.setEnd(LocalDateTime.of(2021,Month.APRIL,23,12,15));
+		lectureDate = lectureDateRepository.save(lectureDate);
+		System.out.println("LectureDate1: " + lectureDate.getStart() + " - " + lectureDate.getEnd());
+		LectureDate lectureDate2 = new LectureDate();
+		lectureDate2.setStart(LocalDateTime.of(2021, Month.APRIL,21,13,15));
+		lectureDate2.setEnd(LocalDateTime.of(2021,Month.APRIL,21,16,30));
+		lectureDate2 = lectureDateRepository.save(lectureDate2);
+		System.out.println("LectureDate2: " + lectureDate2.getStart() + " - " + lectureDate2.getEnd());
 	}
 
 }

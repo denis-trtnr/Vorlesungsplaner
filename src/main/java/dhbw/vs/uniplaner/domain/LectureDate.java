@@ -1,10 +1,7 @@
 package dhbw.vs.uniplaner.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -20,19 +17,19 @@ public class LectureDate implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "startDate")
-    private LocalDate startDate;
+    @Column(name = "start")
+    private LocalDateTime start;
 
-    @Column(name = "endDate")
-    private LocalDate endDate;
+    @Column(name = "end")
+    private LocalDateTime end;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="lecturers_id")
     private Lecturer lecturers;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="lecture_id")
-    private Lecture lecture;
+    @JoinColumn(name="title")
+    private Lecture title;
 
     public Long getId() {
         return id;
@@ -42,20 +39,20 @@ public class LectureDate implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public LocalDateTime getStart() {
+        return start;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setStart(LocalDateTime start) {
+        this.start = start;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public LocalDateTime getEnd() {
+        return end;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 
     public Lecturer getLecturer() {
@@ -67,11 +64,11 @@ public class LectureDate implements Serializable {
     }
 
     public Lecture getLecture() {
-        return lecture;
+        return title;
     }
 
-    public void setLecture(Lecture lecture) {
-        this.lecture = lecture;
+    public void setLecture(Lecture title) {
+        this.title = title;
     }
 
     @Override
@@ -95,8 +92,9 @@ public class LectureDate implements Serializable {
     public String toString() {
         return "LectureDate{" +
             "id=" + getId() +
-            ", startDate='" + getStartDate() + "'" +
-            ", endDate='" + getEndDate() + "'" +
+            ", startDate='" + getStart() + "'" +
+            ", endDate='" + getEnd() + "'" +
             "}";
     }
+
 }

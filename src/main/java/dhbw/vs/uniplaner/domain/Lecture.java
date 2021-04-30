@@ -1,10 +1,7 @@
 package dhbw.vs.uniplaner.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,13 +27,13 @@ public class Lecture implements Serializable {
     @Column(name = "duration")
     private Long duration;
 
-    @OneToMany(mappedBy = "lecture",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "title",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<LectureDate> lectureDates = new HashSet<>();
 
     @ManyToMany(mappedBy = "lectures",fetch = FetchType.EAGER)
     private Set<Lecturer> lecturers = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="course_id")
     private Course courseLecture;
 

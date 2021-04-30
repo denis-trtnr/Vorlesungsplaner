@@ -1,21 +1,18 @@
 package dhbw.vs.uniplaner.service;
 
-
 import dhbw.vs.uniplaner.domain.Lecture;
+import dhbw.vs.uniplaner.domain.LectureDate;
 import dhbw.vs.uniplaner.interfaces.ILectureService;
 import dhbw.vs.uniplaner.repository.LectureRepository;
-import dhbw.vs.uniplaner.domain.Lecture;
-
-
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
