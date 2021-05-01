@@ -31,9 +31,16 @@ public class Role implements Serializable {
     @JoinColumn(name = "uni_user_id", referencedColumnName = "id")
     private UniUser uniUser;
 */
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles")
     private Set<UniUser> uniUsers = new HashSet<>();
 
+
+    public Role(String roleName, String roleUid) {
+        this.roleName = roleName;
+        this.roleUid = roleUid;
+    }
+
+    public Role() {}
 
     public Long getId() {
         return id;

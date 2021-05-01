@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div sec:authorize="isAuthenticated()">Authenticated as <span sec:authentication="name"></span></div>
+<div th:each="lecturers : ${lecturer}" >
+    <h1 th:text="${lecturer.getId()}"></h1>
+</div>
+</body>
+</html>

@@ -27,10 +27,10 @@ public class Lecture implements Serializable {
     @Column(name = "duration")
     private Long duration;
 
-    @OneToMany(mappedBy = "title",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "title")
     private Set<LectureDate> lectureDates = new HashSet<>();
 
-    @ManyToMany(mappedBy = "lectures",fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "lectures")
     private Set<Lecturer> lecturers = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)

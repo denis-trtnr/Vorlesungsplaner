@@ -2,6 +2,7 @@ package dhbw.vs.uniplaner.service;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import dhbw.vs.uniplaner.domain.*;
+import dhbw.vs.uniplaner.interfaces.IRoleService;
 import dhbw.vs.uniplaner.repository.*;
 import dhbw.vs.uniplaner.web.UserRegistrationDto;
 import org.hibernate.Hibernate;
@@ -13,10 +14,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import dhbw.vs.uniplaner.interfaces.IUserService;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -29,7 +30,14 @@ public class UserService implements IUserService {
     private RoleRepository roleRepository;
 
     @Autowired
+    private LecturerRepository lecturerRepository;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private IRoleService roleService;
+
 
     public UniUser findByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -41,12 +49,24 @@ public class UserService implements IUserService {
         user.setLastName(registration.getLastName());
         user.setEmail(registration.getEmail());
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
-        Role role = roleRepository.getOne(1L);
-        user.addRole(role);
+        user.addRole(roleService.getStudent());
         userRepository.save(user);
-        roleRepository.save(role);
+
+
+
         return user;
     }
+
+    /*
+        Lecturer lecturer = new Lecturer();
+        lecturer.setFirstName(registration.getFirstName());
+        lecturer.setLastName(registration.getLastName());
+        lecturer.setEmail(registration.getEmail());
+        Lecture test = new Lecture();
+        test.setDuration(10L);
+        test.setLectureName("Test");
+        test.addLecturer(lecturer);
+        */
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

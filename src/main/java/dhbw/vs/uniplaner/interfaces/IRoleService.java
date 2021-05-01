@@ -25,4 +25,18 @@ public interface IRoleService {
     public Optional<Role> findOne(Long id);
 
     public Role update(Role role);
+
+    public Role getStudent();
+
+    public void createRoles();
+
+    public void setStudent(Role student);
+
+    public Role getDozent();
+
+    public void setDozent(Role dozent);
+
+    public Role getAdmin();
+
+    public void setAdmin(Role admin);
 }

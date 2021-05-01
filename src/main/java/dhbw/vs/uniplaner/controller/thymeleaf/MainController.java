@@ -6,6 +6,8 @@ import dhbw.vs.uniplaner.interfaces.ICourseService;
 import dhbw.vs.uniplaner.interfaces.IDegreeProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,10 @@ public class MainController {
         return "user/index";
     }
 
+    @GetMapping("/abc")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public String calenderView() { return "calendar_view";}
+
 
     @RequestMapping("/programOverview/{id}")
     public String programOverview(Model model, @PathVariable("id") Long id) {
@@ -45,6 +51,17 @@ public class MainController {
         model.addAttribute("course", course);
         return "programOverview";
     }
+
+
+
+
+//
+//    @GetMapping("/addDegree")
+//    public String addDegreePrg(Model model) {
+//        DegreeProgram degreeProgram = new DegreeProgram();
+//        model.addAttribute("degreeprogram", degreeProgram);
+//        return "addDegree";
+//    }
 
 
 

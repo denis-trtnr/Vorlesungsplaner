@@ -29,10 +29,18 @@ public class Lecturer implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "lecturers",cascade = CascadeType.ALL)
+    /*
+    @OneToMany(mappedBy = "lecturers")
+    private Set<LectureDate> lectureDates = new HashSet<>();
+     */
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "lecturer_dates",
+            joinColumns = @JoinColumn(name = "lecturer_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "lectureDate_id", referencedColumnName = "id"))
     private Set<LectureDate> lectureDates = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "lecturer_lecture",
             joinColumns = @JoinColumn(name = "lecturer_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "lecture_id", referencedColumnName = "id"))
@@ -76,13 +84,13 @@ public class Lecturer implements Serializable {
 
     public Lecturer addLectureDate(LectureDate lectureDate) {
         this.lectureDates.add(lectureDate);
-        lectureDate.setLecturer(this);
+        lectureDate.getLecturers().add(this);
         return this;
     }
 
     public Lecturer removeLectureDate(LectureDate lectureDate) {
         this.lectureDates.remove(lectureDate);
-        lectureDate.setLecturer(this);
+        lectureDate.getLecturers().remove(this);
         return this;
     }
 

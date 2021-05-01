@@ -34,10 +34,10 @@ public class Course implements Serializable {
     @Column(name = "endDate")
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "courseLecture",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "courseLecture")
     private Set<Lecture> lectures = new HashSet<>();
 
-    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course")
     private Set<Semester> semesters = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)

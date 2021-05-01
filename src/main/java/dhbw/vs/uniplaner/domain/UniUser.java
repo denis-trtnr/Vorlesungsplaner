@@ -34,7 +34,9 @@ public class UniUser implements Serializable {
     @Column(name = "shibboleth_id")
     private String shibbolethId;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+
+    //(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "uni_user_role",
                joinColumns = @JoinColumn(name = "uni_user_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))

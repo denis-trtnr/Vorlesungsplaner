@@ -22,6 +22,10 @@ import java.util.Optional;
 @Transactional
 public class RoleService implements IRoleService {
 
+    Role student = new Role("ROLE_USER","1");
+    Role dozent = new Role("ROLE_LECTURER","2");
+    Role admin = new Role("ROLE_ADMIN","3");
+
     Logger logger = LoggerFactory.getLogger(RoleService.class);
 
     private final RoleRepository roleRepository;
@@ -60,4 +64,36 @@ public class RoleService implements IRoleService {
         Role savedRole = roleRepository.findById(role.getId()).orElseThrow(() -> new ResourceNotFoundException());
         return roleRepository.save(savedRole);
     }
+
+
+    public Role getStudent() {
+        return student;
+    }
+
+    public void createRoles() {
+        roleRepository.save(student);
+        roleRepository.save(dozent);
+        roleRepository.save(admin);
+    }
+
+    public void setStudent(Role student) {
+        this.student = student;
+    }
+
+    public Role getDozent() {
+        return dozent;
+    }
+
+    public void setDozent(Role dozent) {
+        this.dozent = dozent;
+    }
+
+    public Role getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Role admin) {
+        this.admin = admin;
+    }
+
 }

@@ -3,6 +3,8 @@ package dhbw.vs.uniplaner.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Die Klasse stellt einen Vorlesungstermin dar.
@@ -23,9 +25,13 @@ public class LectureDate implements Serializable {
     @Column(name = "end")
     private LocalDateTime end;
 
+    /*
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="lecturers_id")
     private Lecturer lecturers;
+    */
+    @ManyToMany(mappedBy = "lectureDates")
+    private Set<Lecturer> lecturers = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="title")
@@ -55,12 +61,12 @@ public class LectureDate implements Serializable {
         this.end = end;
     }
 
-    public Lecturer getLecturer() {
+    public Set<Lecturer> getLecturers() {
         return lecturers;
     }
 
-    public void setLecturer(Lecturer lecturer) {
-        this.lecturers = lecturer;
+    public void setLecturers(Set<Lecturer> lecturers) {
+        this.lecturers = lecturers;
     }
 
     public Lecture getLecture() {
