@@ -137,10 +137,10 @@ public class Lecture implements Serializable {
     @Override
     public String toString() {
         return "Lecture{" +
-            "id=" + getId() +
-            ", lectureName='" + getLectureName() + "'" +
-            ", modulName='" + getModulName() + "'" +
-            ", duration=" + getDuration() +
-            "}";
+                "id=" + getId() +
+                ", lectureName='" + getLectureName() + "'" +
+                ", modulName='" + getModulName() + "'" +
+                ", duration=" + getDuration() +
+                "}";
     }
 }

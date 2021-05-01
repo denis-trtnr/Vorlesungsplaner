@@ -25,7 +25,7 @@ public class DegreeProgram implements Serializable {
     @Column(name = "shortName")
     private String shortName;
 
-    @OneToMany(mappedBy = "degreeProgram",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "degreeProgram")
     private Set<Course> courses = new HashSet<>();
 
     public Long getId() {

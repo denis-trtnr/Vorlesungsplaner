@@ -5,8 +5,6 @@ import dhbw.vs.uniplaner.domain.*;
 import dhbw.vs.uniplaner.interfaces.IRoleService;
 import dhbw.vs.uniplaner.interfaces.IUserService;
 import dhbw.vs.uniplaner.repository.*;
-import dhbw.vs.uniplaner.service.UserService;
-import dhbw.vs.uniplaner.web.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,8 +26,6 @@ public class UniplanerApplication implements CommandLineRunner {
 	@Autowired
 	private LectureRepository lectureRepository;
 	@Autowired
-	private LecturerRepository lecturerRepository;
-	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private LectureDateRepository lectureDateRepository;
@@ -39,8 +35,12 @@ public class UniplanerApplication implements CommandLineRunner {
 	private IRoleService roleService;
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-
-
+	@Autowired
+	private DegreeProgramRepository degreeProgramRepository;
+	@Autowired
+	private LecturerRepository lecturerRepository;
+	@Autowired
+	private RoleRepository roleRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(UniplanerApplication.class, args);
@@ -50,11 +50,32 @@ public class UniplanerApplication implements CommandLineRunner {
 		roleService.createRoles();
 
 		Course course = new Course();
+		Lecture lecture1 = new Lecture();
+		Course course2 = new Course();
+		DegreeProgram degreeProgram1 = new DegreeProgram();
+		Role role = new Role();
+
+//		DegreeProgram degreeProgram2 = new DegreeProgram();
+
+		degreeProgram1.setName("Wirtschaftsinformatik");
+		degreeProgram1.setShortName("WI");
+		degreeProgram1.addCourse(course);
+		course.setDegreeProgram(degreeProgram1);
+		degreeProgram1.addCourse(course2);
+		course.setDegreeProgram(degreeProgram1);
+		degreeProgram1 = degreeProgramRepository.save(degreeProgram1);
+		System.out.println("dP="+ degreeProgram1.toString());
+//		degreeProgram2.setName("Informatik");
+//		degreeProgram2.setShortName("Inf");
+//		degreeProgram2 = degreeProgramRepository.save(degreeProgram2);
+//		System.out.println("dP="+ degreeProgram2.toString());
+
+
 		course.setCourseName("WWI2022H");
 		course.setStartingYear(2022L);
 		course = courseRepository.save(course);
 		System.out.println("course="+ course.toString());
-		Course course2 = new Course();
+
 		course2.setCourseName("WWI2022G");
 		course2.setStartingYear(2021L);
 		course2 = courseRepository.save(course2);
@@ -63,11 +84,25 @@ public class UniplanerApplication implements CommandLineRunner {
 		createUserOrAdmin("m","m","m","m",roleService.getStudent());
 		createUserOrAdmin("x","x","x","x",roleService.getStudent());
 
+
+
+
+		course.addLecture(lecture1);
+
+		lecture1 =lectureRepository.save(lecture1);
+		course = courseRepository.save(course);
+		course2 = courseRepository.save(course2);
+		System.out.println("course="+ course.toString());
+		System.out.println("course="+ course2.toString());
+		System.out.println("lecture="+ lecture1.toString());
+
 		//Lecture erstellen
 		Lecture lecture = new Lecture();
 		lecture.setLectureName("Einführung");
 		lecture.setDuration(53L);
 		course.addLecture(lecture);
+
+//		course.addLecture(lecture1);
 
 		//Create random Dates to lecture
 		Set<LectureDate> lectureDatesSet1 = createListOfDates(5);
@@ -75,9 +110,15 @@ public class UniplanerApplication implements CommandLineRunner {
 		//Erstelle Dozent und füg ihn zur List hinzu
 		Lecturer dozent1 = createDozent("e","e","e","e");
 		Lecturer dozent2 = createDozent("f","f","f","f");
+		Lecturer lecturer = createDozent("basti", "Richter", "basti@gmx.com", "b");
+		Lecturer lecturer1 = createDozent("Erich", "Heumüller", "erich@gmx.com", "q");
+		Lecturer lecturer2 = createDozent("Thomas", "Specht", "thomas@gmx.com", "t");
 		Set<Lecturer> dozenten_1 = new HashSet<>();
 		dozenten_1.add(dozent1);
 		dozenten_1.add(dozent2);
+		dozenten_1.add(lecturer);
+		dozenten_1.add(lecturer1);
+		dozenten_1.add(lecturer2);
 
 		//Map die drei zusammen
 		mapLs(lecture, lectureDatesSet1, dozenten_1);
@@ -121,7 +162,7 @@ public class UniplanerApplication implements CommandLineRunner {
 	private Lecturer createDozent(String firstname, String lastname, String email, String password) {
 		createUserOrAdmin(firstname,lastname,email,password,roleService.getDozent());
 		Lecturer dozent = new Lecturer();
-		dozent.setEmail(password);
+		dozent.setEmail(email);
 		dozent.setFirstName(firstname);
 		dozent.setLastName(lastname);
 		return dozent;

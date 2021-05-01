@@ -155,11 +155,11 @@ public class Course implements Serializable {
     @Override
     public String toString() {
         return "Course{" +
-            "id=" + getId() +
-            ", courseName='" + getCourseName() + "'" +
-            ", startDate='" + getStartDate() + "'" +
-            ", endDate='" + getEndDate() + "'" +
-            "}";
+                "id=" + getId() +
+                ", courseName='" + getCourseName() + "'" +
+                ", startDate='" + getStartDate() + "'" +
+                ", endDate='" + getEndDate() + "'" +
+                "}";
     }
 
     public void setStartingYear(long l) {

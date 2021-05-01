@@ -138,10 +138,10 @@ public class Lecturer implements Serializable {
     @Override
     public String toString() {
         return "Lecturer{" +
-            "id=" + getId() +
-            ", firstName='" + getFirstName() + "'" +
-            ", lastName='" + getLastName() + "'" +
-            ", email='" + getEmail() + "'" +
-            "}";
+                "id=" + getId() +
+                ", firstName='" + getFirstName() + "'" +
+                ", lastName='" + getLastName() + "'" +
+                ", email='" + getEmail() + "'" +
+                "}";
     }
 }

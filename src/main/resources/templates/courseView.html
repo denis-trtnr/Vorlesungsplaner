@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kurs</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<h1 th:text="${course.courseName}">Hello World</h1>
+
+
+<form action="#" th:action="@{/save-lecture/}" th:object="${lecture}" method="post" id="my_form">
+    <input type="hidden" id="courseId" name="courseId" th:value="${course.id}" form="my_form">
+<table>
+    <tr>
+        <th>Lecture Name</th>
+        <th>Modul Name</th>
+        <th>Lecturers</th>
+        <th>Duration</th>
+        <th></th>
+    </tr>
+    <tr th:each="lecturee : ${course.lectures}">
+        <td th:text="${lecturee.lectureName}"></td>
+        <td th:text="${lecturee.modulName}"></td>
+            <td>
+                <p th:each="lecturer : ${lecturee.lecturers}" th:text="${lecturer.email}"></p>
+            </td>
+        <td th:text="${lecturee.duration}"></td>
+        <td>
+            <a th:href="@{/remove-lecture/{id} (id = ${lecturee.id})}">
+                <button th:text="${lecturee.id}"   type="button" class="btn btn-danger">
+                </button>
+            </a>
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+            <input type="text" id="nameLecture" placeholder="Lecture name" th:field="*{lectureName}" form="my_form">
+        </td>
+        <td>
+            <input type="text" id="modulName" placeholder="Modul name" th:field="*{modulName}" form="my_form">
+        </td>
+        <td>
+<!--            <input list="studiengangKurse" id="lecturersId" name="lecturersId" form="my_form" />-->
+<!--                        <datalist id="studiengangKurse">-->
+<!--                            <option th:each="lecturer : ${lecturers}" th:text="${lecturer.email}" th:value="${lecturer.id}"></option>-->
+<!--                        </datalist>-->
+            <select multiple id="lecturersId" name="lecturersId" form="my_form">
+                <option th:each="lecturer : ${lecturers}" th:text="${lecturer.email}" th:value="${lecturer.id}"></option>
+            </select>
+        </td>
+        <td>
+            <input type="text" id="duration" placeholder="Duration" th:field="*{duration}" form="my_form">
+        </td>
+        <td><button type="submit" class="btn btn-primary" value="value" form="my_form">Submit</button></td>
+    </tr>
+</table>
+</form>
+
+
+</body>
+</html>

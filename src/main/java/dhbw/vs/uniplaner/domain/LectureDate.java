@@ -97,10 +97,10 @@ public class LectureDate implements Serializable {
     @Override
     public String toString() {
         return "LectureDate{" +
-            "id=" + getId() +
-            ", startDate='" + getStart() + "'" +
-            ", endDate='" + getEnd() + "'" +
-            "}";
+                "id=" + getId() +
+                ", startDate='" + getStart() + "'" +
+                ", endDate='" + getEnd() + "'" +
+                "}";
     }
 
 }
