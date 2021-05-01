@@ -26,4 +26,6 @@ public interface ILectureDateService {
     public Optional<LectureDate> findOne(Long id);
 
     public LectureDate update(LectureDate lectureDate);
+
+    //public LectureDate findByCourse();
 }

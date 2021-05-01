@@ -75,13 +75,13 @@ public class Lecture implements Serializable {
 
     public Lecture addLectureDate(LectureDate lectureDate) {
         this.lectureDates.add(lectureDate);
-        lectureDate.setLecture(this);
+        lectureDate.setTitle(this);
         return this;
     }
 
     public Lecture removeLectureDate(LectureDate lectureDate) {
         this.lectureDates.remove(lectureDate);
-        lectureDate.setLecture(null);
+        lectureDate.setTitle(null);
         return this;
     }
 

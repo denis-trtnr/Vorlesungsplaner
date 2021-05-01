@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
 
 @SpringBootApplication
 public class UniplanerApplication implements CommandLineRunner {
@@ -54,8 +55,7 @@ public class UniplanerApplication implements CommandLineRunner {
 		Course course2 = new Course();
 		DegreeProgram degreeProgram1 = new DegreeProgram();
 		Role role = new Role();
-
-//		DegreeProgram degreeProgram2 = new DegreeProgram();
+		DegreeProgram degreeProgram2 = new DegreeProgram();
 
 		degreeProgram1.setName("Wirtschaftsinformatik");
 		degreeProgram1.setShortName("WI");
@@ -72,12 +72,11 @@ public class UniplanerApplication implements CommandLineRunner {
 
 
 		course.setCourseName("WWI2022H");
-		course.setStartingYear(2022L);
+		course.setStartingYear(2019L);
 		course = courseRepository.save(course);
 		System.out.println("course="+ course.toString());
-
 		course2.setCourseName("WWI2022G");
-		course2.setStartingYear(2021L);
+		course2.setStartingYear(2020L);
 		course2 = courseRepository.save(course2);
 		System.out.println("course="+ course2.toString());
 
@@ -101,8 +100,6 @@ public class UniplanerApplication implements CommandLineRunner {
 		lecture.setLectureName("Einführung");
 		lecture.setDuration(53L);
 		course.addLecture(lecture);
-
-//		course.addLecture(lecture1);
 
 		//Create random Dates to lecture
 		Set<LectureDate> lectureDatesSet1 = createListOfDates(5);

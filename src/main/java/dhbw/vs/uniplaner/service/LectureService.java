@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.service;
 
+import dhbw.vs.uniplaner.Event;
 import dhbw.vs.uniplaner.domain.Lecture;
 import dhbw.vs.uniplaner.domain.LectureDate;
 import dhbw.vs.uniplaner.interfaces.ILectureService;
@@ -57,5 +58,17 @@ public class LectureService implements ILectureService {
         logger.debug("Request to update Lecture {}",lecture.getId());
         Lecture savedLecture = lectureRepository.findById(lecture.getId()).orElseThrow(() -> new ResourceNotFoundException());
         return lectureRepository.save(savedLecture);
+    }
+
+    public List<Event> createEventsfromLectureDates(List<LectureDate> lectureDates) {
+        List<Event> calendarEvents = new ArrayList<>();
+        for (LectureDate lectureDate : lectureDates) {
+            Event event = new Event();
+            event.setTitle(findOne(lectureDate.getTitle().getId()).get().getLectureName());
+            event.setStart(lectureDate.getStart().toString());
+            event.setEnd(lectureDate.getEnd().toString());
+            calendarEvents.add(event);
+        }
+        return calendarEvents;
     }
 }

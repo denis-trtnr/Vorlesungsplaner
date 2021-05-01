@@ -1,8 +1,10 @@
 package dhbw.vs.uniplaner.interfaces;
 
+import dhbw.vs.uniplaner.Event;
 import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.Lecture;
 
+import dhbw.vs.uniplaner.domain.LectureDate;
 import dhbw.vs.uniplaner.interfaces.ILectureService;
 import dhbw.vs.uniplaner.repository.LectureRepository;
 
@@ -25,4 +27,6 @@ public interface ILectureService {
     public Optional<Lecture> findOne(Long id);
 
     public Lecture update(Lecture lecture);
+
+    public List<Event> createEventsfromLectureDates(List<LectureDate> lectureDates);
 }

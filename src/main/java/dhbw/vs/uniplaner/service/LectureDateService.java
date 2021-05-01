@@ -9,8 +9,6 @@ import dhbw.vs.uniplaner.repository.LectureDateRepository;
 import dhbw.vs.uniplaner.domain.LectureDate;
 
 
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -64,18 +62,5 @@ public class LectureDateService implements ILectureDateService {
         LectureDate savedLectureDate = lecturedateRepository.findById(lectureDate.getId()).orElseThrow(() -> new ResourceNotFoundException());
         return lecturedateRepository.save(savedLectureDate);
     }
-
-//    public List<Event> getEventsFromLectureDate(List<LectureDate> termine) {
-//        List<Event> events = new ArrayList<>();
-//        for (LectureDate lectureDate : termine) {
-//            Event event = new Event();
-//            //event.setTitle(findOne(lectureDate.getLecture().getId()).get().getLectureName());
-//            event.setTitle(lectureDate.getLecture().getLectureName());
-//            event.setStart(lectureDate.getStart());
-//            event.setEnd(lectureDate.getEnd());
-//            events.add(event);
-//        }
-//        return events;
-//    }
 
 }

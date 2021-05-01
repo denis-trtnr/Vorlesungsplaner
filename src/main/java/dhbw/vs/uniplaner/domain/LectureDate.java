@@ -69,11 +69,11 @@ public class LectureDate implements Serializable {
         this.lecturers = lecturers;
     }
 
-    public Lecture getLecture() {
+    public Lecture getTitle() {
         return title;
     }
 
-    public void setLecture(Lecture title) {
+    public void setTitle(Lecture title) {
         this.title = title;
     }
 

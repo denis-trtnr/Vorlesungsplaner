@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.controller.REST;
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.domain.LectureDate;
 import dhbw.vs.uniplaner.interfaces.ILectureDateService;
 import dhbw.vs.uniplaner.exception.BadRequestException;
@@ -26,11 +27,17 @@ public class LectureDateController {
     @Autowired
     private ILectureDateService lectureDateService;
 
+//    @PostMapping("/lecturedates")
+//    public ResponseEntity<LectureDate> createLectureDate(@RequestBody LectureDate lecturedate) throws BadRequestException, URISyntaxException {
+//        lectureDateService.save(lecturedate);
+//        return ResponseEntity.status(HttpStatus.CREATED).build();
+//    }
+
     @PostMapping("/lecturedates")
-    public ResponseEntity<LectureDate> createLectureDate(@RequestBody LectureDate lecturedate) throws BadRequestException, URISyntaxException {
+    public ResponseEntity<LectureDate> createLectureDate(@ModelAttribute("lecturedate") LectureDate lecturedate) throws BadRequestException, URISyntaxException {
         lectureDateService.save(lecturedate);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+}
 
     /**
      * {@code PUT  /lecturedates} : Updates an existing LectureDate.
@@ -66,15 +73,17 @@ public class LectureDateController {
     public ResponseEntity<Optional<LectureDate>> getLectureDate(@PathVariable Long id) throws ResourceNotFoundException {
         return ResponseEntity.ok(lectureDateService.findOne(id));
     }
-        /**
-         * {@code DELETE  /lecturedates/:id} : delete the "id" lecturedate.
-         *
-         * @param id the id of the lecturedate to delete.
-         * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
-         */
-        @DeleteMapping("/lecturedates/{id}")
-        public ResponseEntity<Void> deleteLectureDate(@PathVariable Long id) {
-            lectureDateService.delete(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
+
+    /**
+     * {@code DELETE  /lecturedates/:id} : delete the "id" lecturedate.
+     *
+     * @param id the id of the lecturedate to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping("/lecturedates/{id}")
+    public ResponseEntity<Void> deleteLectureDate(@PathVariable Long id) {
+        lectureDateService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
