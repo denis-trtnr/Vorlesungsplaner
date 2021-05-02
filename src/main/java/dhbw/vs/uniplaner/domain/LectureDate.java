@@ -38,8 +38,8 @@ public class LectureDate implements Serializable {
     private Set<Lecturer> lecturers = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="title")
-    private Lecture title;
+    @JoinColumn(name="lecture")
+    private Lecture lecture;
 
     public Long getId() {
         return id;
@@ -73,12 +73,12 @@ public class LectureDate implements Serializable {
         this.lecturers = lecturers;
     }
 
-    public Lecture getTitle() {
-        return title;
+    public Lecture getLecture() {
+        return lecture;
     }
 
-    public void setTitle(Lecture title) {
-        this.title = title;
+    public void setLecture(Lecture lecture) {
+        this.lecture = lecture;
     }
 
     @Override

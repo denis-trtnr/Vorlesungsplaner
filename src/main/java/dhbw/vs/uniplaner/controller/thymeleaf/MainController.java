@@ -25,7 +25,17 @@ public class MainController {
 
     @GetMapping("/")
     public String root() {
-        return "index";
+        return "redirect:/home";
+    }
+
+    @RequestMapping("/home")
+    public String listCourses(Model model) {
+        model.addAttribute("programs", degreeProgramService.findAll());
+        DegreeProgram degreeProgram = new DegreeProgram();
+        model.addAttribute("degreeprogram", degreeProgram);
+        Course course = new Course();
+        model.addAttribute("course", course);
+        return "home";
     }
 
     @GetMapping("/login")
@@ -33,24 +43,20 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/user")
-    public String userIndex() {
-        return "user/index";
-    }
-
-    @GetMapping("/abc")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public String calenderView() { return "calendar_view";}
+//    @GetMapping("/user")
+//    public String userIndex() {
+//        return "user/index";
+//    }
 
 
-    @RequestMapping("/programOverview/{id}")
-    public String programOverview(Model model, @PathVariable("id") Long id) {
-        Optional<DegreeProgram> degreeProgram = degreeProgramService.findOne(id);
-        degreeProgram.ifPresent(program -> model.addAttribute("program", program));
-        Course course = new Course();
-        model.addAttribute("course", course);
-        return "programOverview";
-    }
+//    @RequestMapping("/programOverview/{id}")
+//    public String programOverview(Model model, @PathVariable("id") Long id) {
+//        Optional<DegreeProgram> degreeProgram = degreeProgramService.findOne(id);
+//        degreeProgram.ifPresent(program -> model.addAttribute("program", program));
+//        Course course = new Course();
+//        model.addAttribute("course", course);
+//        return "programOverview";
+//    }
 
 
 

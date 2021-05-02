@@ -34,7 +34,7 @@ public class Lecture implements Serializable {
     @Column(name = "remainingDuration")
     private Long remainingDuration;
 
-    @OneToMany(mappedBy = "title")
+    @OneToMany(mappedBy = "lecture")
     private Set<LectureDate> lectureDates = new HashSet<>();
 
     @ManyToMany(mappedBy = "lectures")
@@ -92,13 +92,13 @@ public class Lecture implements Serializable {
             }
         }
         this.lectureDates.add(lectureDate);
-        lectureDate.setTitle(this);
+        lectureDate.setLecture(this);
         return this;
     }
 
     public Lecture removeLectureDate(LectureDate lectureDate) {
         this.lectureDates.remove(lectureDate);
-        lectureDate.setTitle(null);
+        lectureDate.setLecture(null);
         return this;
     }
 
