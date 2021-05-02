@@ -15,7 +15,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link active" th:href="@{/home}">Home</a>
-            <a class="nav-item nav-link" th:href="@{/tutor-calendar}">TutorBoard</a>
+            <a class="nav-item nav-link" th:href="@{/dozentenboard(email=${name})}">TutorBoard</a>
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
     </div>

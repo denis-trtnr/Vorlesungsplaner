@@ -14,7 +14,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a class="nav-item nav-link active" th:href="@{/tutor-calendar}">TutorBoard</a>
+            <a class="nav-item nav-link active" th:href="@{/dozentenboard(email=${name})}">TutorBoard</a>
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
     </div>
@@ -34,13 +34,7 @@
             <!--        <div class="col col-lg-2">-->
             <div class="col-3">
 
-                <h3>Eingabe</h3><br /> <br />
-                <h5>Start</h5>
-                <input type="datetime-local"> <br /><br />
-                <h5>End</h5>
-                <input type="datetime-local"><br /><br />
-                <input type="button" value="add event" onclick="addEvent()"></input>
-
+                <h3>Neuer Termin:</h3><br/><br/>
                 <form action="#" th:action="@{/save-lecturedate}" th:object="${lecturedate}" method="post">
                     <p>Start: <input type="datetime-local" th:field="*{start}" /></p>
                     <p>End: <input type="datetime-local" th:field="*{end}" /></p>

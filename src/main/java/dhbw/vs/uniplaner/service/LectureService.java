@@ -60,8 +60,8 @@ public class LectureService implements ILectureService {
         return lectureRepository.save(savedLecture);
     }
 
-    public List<Event> createEventsfromLectureDates(List<LectureDate> lectureDates) {
-        List<Event> calendarEvents = new ArrayList<>();
+    public ArrayList<Event> getEventsFromLectureDates(ArrayList<LectureDate> lectureDates) {
+        ArrayList<Event> calendarEvents = new ArrayList<>();
         for (LectureDate lectureDate : lectureDates) {
             Event event = new Event();
             event.setTitle(findOne(lectureDate.getTitle().getId()).get().getLectureName());

@@ -23,8 +23,14 @@ document.addEventListener('DOMContentLoaded', function () {
             endTime: '19:00', // an end time (6pm in this example)
         },
 
-    events: 'http://localhost:8080/api/lecturedates',
+    // events: 'http://localhost:8080/api/lecturedates',
+        events: 'http://localhost:8080/processCourse',
 
+        // eventConstraint: {
+        //     start: '2021-15-03',
+        //     end: '2021-04-07', // hard coded goodness unfortunately
+        //     //dow: [1, 2, 3 ,4 ,5]
+        // },
         //Manuelle Events
         // [
         // {

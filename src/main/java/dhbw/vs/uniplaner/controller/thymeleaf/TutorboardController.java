@@ -31,8 +31,8 @@ public class TutorboardController {
 
     @PostMapping("/save-lecturedate")
     public String saveDegreeProgram(@ModelAttribute LectureDate lecturedate) {
-        Optional<Lecture> lecture = lectureService.findOne(lecturedate.getTitle().getId());
-        lecture.ifPresent(lecturedate::setTitle);
+//        Optional<Lecture> lecture = lectureService.findOne(lecturedate.getTitle().getId());
+//        lecture.ifPresent(lecturedate::setTitle);
         lectureDateService.save(lecturedate);
         return "redirect:/tutor-calendar";
     }

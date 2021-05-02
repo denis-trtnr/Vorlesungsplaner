@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +28,5 @@ public interface ILectureService {
 
     public Lecture update(Lecture lecture);
 
-    public List<Event> createEventsfromLectureDates(List<LectureDate> lectureDates);
+    public ArrayList<Event> getEventsFromLectureDates(ArrayList<LectureDate> lectureDates);
 }
