@@ -28,7 +28,7 @@
             </td>
         <td th:text="${lecturee.duration}"></td>
         <td>
-            <a th:href="@{/remove-lecture/{id} (id = ${lecturee.id})}">
+            <a th:href="@{/remove-lecture(idLecture = ${lecturee.id}, idCourse=${course.id})}">
                 <button th:text="${lecturee.id}"   type="button" class="btn btn-danger">
                 </button>
             </a>

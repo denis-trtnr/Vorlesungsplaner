@@ -47,17 +47,19 @@ public class courseViewController {
         lectureService.save(lecture);
         Optional<Course> course = courseService.findOne(Long.parseLong(courseId));
         course.ifPresent(thecourse -> courseService.update(thecourse.addLecture(lecture)));
-
         System.out.println(lecture);
-
-
         String redirect = "/courseview/" + courseId;
         return new RedirectView(redirect);
     }
 
-    @RequestMapping(value = "/remove-lecture/{id}", method = RequestMethod.DELETE)
-    public RedirectView removeLecture(){
-        return new RedirectView("/overview");
+    @GetMapping(value = "/remove-lecture")
+    public RedirectView removeLecture(@RequestParam(value = "idLecture", required = false) String id,
+                                      @RequestParam(value = "idCourse", required = false) String courseId){
+        System.out.println(id);
+        System.out.println(courseId);
+        lectureService.delete(Long.parseLong(id));
+        String redirect = "/courseview/" + courseId;
+        return new RedirectView(redirect);
     }
 
 }

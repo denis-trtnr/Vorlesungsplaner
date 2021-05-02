@@ -146,7 +146,7 @@ public class UniplanerApplication implements CommandLineRunner {
 		for(int i = 0; i<count;i++) {
 			LectureDate lectureDate = new LectureDate();
 			lectureDate.setStart(LocalDateTime.of(2021, Month.APRIL,23+i,9,0));
-			lectureDate.setEnd(LocalDateTime.of(2021,Month.APRIL,23+i,11,15));
+			lectureDate.setEnd(LocalDateTime.of(2021,Month.APRIL,23+i,12,15));
 			lectureDates.add(lectureDate);
 		}
 		return lectureDates;
