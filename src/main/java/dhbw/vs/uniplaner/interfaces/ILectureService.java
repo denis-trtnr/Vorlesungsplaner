@@ -28,5 +28,5 @@ public interface ILectureService {
 
     public Lecture update(Lecture lecture);
 
-    public ArrayList<Event> getEventsFromLectureDates(ArrayList<LectureDate> lectureDates);
+    public ArrayList<Event> convertLectureDatesToEvents(ArrayList<LectureDate> lectureDates);
 }

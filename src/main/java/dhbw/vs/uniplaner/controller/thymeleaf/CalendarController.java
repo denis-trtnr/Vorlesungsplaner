@@ -46,37 +46,20 @@ public class CalendarController {
         return "home";
     }
 
-//    @GetMapping("/course-calendar")
-//    public String calenderView() { return "calendar_view";}
-
-//    @RequestMapping("/courseCalendar/{id}") // hier muss eine Liste von events übergeben werden
-//    public String programOverview(Model model, @PathVariable("id") Long id) {
-//        Optional<Course> findCourse = courseService.findOne(id);
-//        findCourse.ifPresent(course -> model.addAttribute("course", course));
-//        return "calendar_view";
-//    }
-
-//    @GetMapping(path = "/lecturedates-course/{id}")
-//    public ResponseEntity<List<Event>> getAllLectureDatesByCourse(@PathVariable Long id) {
-////        Optional<Course> course = courseService.findOne(id);
-////        course.ifPresent(allLectures = course);
-////        return ResponseEntity.ok(courseService. lectureDateService.findByCourse(courseService.getid));
-////        System.out.println(id);
-//
-//        return null;
-
-//    @GetMapping(path = "/lecturedatesOfCourse", produces = {"applicationn/json", "text/json"})
-//    @ResponseBody
-//    public ResponseEntity<List<Event>> getAllLectureDatesByCourse() {
-//        return lectureService.getEventsFromLectureDates(lectureDateService.getByCourse(courseid));
-//    }
-@RequestMapping("/courseCalendar/{id}") // hier muss eine Liste von events übergeben werden
-public String programOverview(Model model, @PathVariable("id") Long id) {
-    Optional<Course> findCourse = courseService.findOne(id);
-    findCourse.ifPresent(course -> model.addAttribute("course", course));
-    this.currentCourse = id;
-    return "calendar_view";
+    @RequestMapping("/courseCalendar/{id}")
+    public String programOverview(Model model, @PathVariable("id") Long id) {
+        Optional<Course> findCourse = courseService.findOne(id);
+        findCourse.ifPresent(course -> model.addAttribute("course", course));
+        this.currentCourse = id;
+        return "calendar_view";
 }
+
+    // Hier holt sich Fullcalendar die KursEvents
+    @GetMapping(path = "/processCourse", produces = {"application/json", "text/json"})
+    @ResponseBody
+    public ArrayList<Event> processCourse() {
+        return lectureService.convertLectureDatesToEvents(lectureDateRepository.findByCourse(this.currentCourse));
+    }
 
 //    @PostMapping("/currentCourse")
 //    public  String setAktuellerKurs(@ModelAttribute(value = "course") Course course) {
@@ -84,9 +67,4 @@ public String programOverview(Model model, @PathVariable("id") Long id) {
 //        return "redirect:/courseCalendar/";
 //    }
 
-    @GetMapping(path = "/processCourse", produces = {"applicationn/json", "text/json"})
-    @ResponseBody
-    public ArrayList<Event> processCourse() {
-        return lectureService.getEventsFromLectureDates(lectureDateRepository.findByCourse(this.currentCourse));
-    }
 }

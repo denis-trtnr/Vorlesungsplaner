@@ -22,16 +22,14 @@
         <a class="nav-item nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Log-Out</a>
     </div>
 </nav> <br/>
-
 <h2>Vorlesungspläne der DHBW Stuttgart</h2> <br/><br/>
 <div th:each="program : ${programs}" >
     <h2 th:text="${program.name}"></h2>
     <hr>
     <div th:each="course : ${program.courses}">
-<!--        action="#" th:action="@{/currentCourse}" method="post" th:object="${course}"-->
-            <a th:href="@{/courseCalendar/{id} (id = ${course.id})}">
+        <a th:href="@{/courseCalendar/{id} (id = ${course.id})}">
             <button th:text="${course.courseName}" class="btn btn-dark"></button> <br/><br/>
-            </a>
+        </a>
     </div> <br/><br/>
 </div>
 </body>

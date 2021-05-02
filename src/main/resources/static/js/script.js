@@ -2,7 +2,7 @@
 
 //Henrik Start
 document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
+    var calendarEl = document.getElementById('courseCalendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         aspectRatio: 2,
@@ -19,11 +19,10 @@ document.addEventListener('DOMContentLoaded', function () {
         selectable: true,
         businessHours: {
             daysOfWeek: [1, 2, 3, 4, 5, 6], // Monday - Thursday
-            startTime: '07:00', // a start time (10am in this example)
-            endTime: '19:00', // an end time (6pm in this example)
+            startTime: '08:00', // a start time (10am in this example)
+            endTime: '18:00', // an end time (6pm in this example)
         },
 
-    // events: 'http://localhost:8080/api/lecturedates',
         events: 'http://localhost:8080/processCourse',
 
         // eventConstraint: {
@@ -55,35 +54,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //Genau so wie bei Daniel - Es funktioniert!
-async function loadCourseEvents(id) {
-        url = "http://localhost:8080/lecturedates-course/" + id;
-        const res = await fetch(url);
-        const json = await res.json();
-        console.log(json);
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            hiddenDays: [0],
-            weekNumbers: true,
-            navLinks: true,
-            nowIndicator: true,
-            businessHours: {
-                daysOfWeek: [1, 2, 3, 4, 5, 6], // Monday - Thursday
-                startTime: '07:00', // a start time (10am in this example)
-                endTime: '19:00', // an end time (6pm in this example)
-            },
-            dayMaxEvents: true,
-            editable: true,
-            events: json,
-        });
-        calendar.render();
-}
-
-function addEvent() {
-}
+// async function loadCourseEvents() {
+//         url = "http://localhost:8080/processCourse";
+//         const res = await fetch(url);
+//         const json = await res.json();
+//         console.log(json);
+//         var calendarEl = document.getElementById('courseCalendar');
+//         var calendar = new FullCalendar.Calendar(calendarEl, {
+//             initialView: 'dayGridMonth',
+//
+//             headerToolbar: {
+//                 left: 'prev,next today',
+//                 center: 'title',
+//                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
+//             },
+//             hiddenDays: [0],
+//             weekNumbers: true,
+//             navLinks: true,
+//             nowIndicator: true,
+//             businessHours: {
+//                 daysOfWeek: [1, 2, 3, 4, 5, 6], // Monday - Thursday
+//                 startTime: '07:00', // a start time (10am in this example)
+//                 endTime: '19:00', // an end time (6pm in this example)
+//             },
+//             dayMaxEvents: true,
+//             editable: true,
+//             events: json,
+//         });
+//         calendar.render();
+// }
