@@ -2,6 +2,7 @@ package dhbw.vs.uniplaner;
 
 
 import dhbw.vs.uniplaner.domain.*;
+import dhbw.vs.uniplaner.exception.IllegalOperationException;
 import dhbw.vs.uniplaner.interfaces.IRoleService;
 import dhbw.vs.uniplaner.interfaces.IUserService;
 import dhbw.vs.uniplaner.repository.*;
@@ -101,8 +102,13 @@ public class UniplanerApplication implements CommandLineRunner {
 		lecture.setDuration(53L);
 		course.addLecture(lecture);
 
+		Lecture lectureX = new Lecture();
+		lectureX.setLectureName("Programmierung");
+		lectureX.setDuration(53L);
+		course.addLecture(lectureX);
+
 		//Create random Dates to lecture
-		Set<LectureDate> lectureDatesSet1 = createListOfDates(5);
+		Set<LectureDate> lectureDatesSet1 = createListOfDates(4);
 
 		//Erstelle Dozent und füg ihn zur List hinzu
 		Lecturer dozent1 = createDozent("e","e","e","e");
@@ -119,10 +125,10 @@ public class UniplanerApplication implements CommandLineRunner {
 
 		//Map die drei zusammen
 		mapLs(lecture, lectureDatesSet1, dozenten_1);
-
+		mapLs(lectureX, lectureDatesSet1, dozenten_1);
 	}
 
-	private void mapLs(Lecture lecture, Set<LectureDate> lectureDates, Set<Lecturer> lecturers) {
+	private void mapLs(Lecture lecture, Set<LectureDate> lectureDates, Set<Lecturer> lecturers) throws IllegalOperationException {
 		for(Lecturer lecturer:lecturers) {
 			lecture.addLecturer(lecturer);
 			lectureRepository.save(lecture);
@@ -140,7 +146,7 @@ public class UniplanerApplication implements CommandLineRunner {
 		for(int i = 0; i<count;i++) {
 			LectureDate lectureDate = new LectureDate();
 			lectureDate.setStart(LocalDateTime.of(2021, Month.APRIL,23+i,9,0));
-			lectureDate.setEnd(LocalDateTime.of(2021,Month.APRIL,23+i,12,15));
+			lectureDate.setEnd(LocalDateTime.of(2021,Month.APRIL,23+i,11,15));
 			lectureDates.add(lectureDate);
 		}
 		return lectureDates;

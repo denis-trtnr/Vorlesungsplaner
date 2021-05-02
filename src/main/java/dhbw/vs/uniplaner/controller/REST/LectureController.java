@@ -1,6 +1,8 @@
 package dhbw.vs.uniplaner.controller.REST;
 
+import dhbw.vs.uniplaner.domain.DegreeProgram;
 import dhbw.vs.uniplaner.domain.Lecture;
+import dhbw.vs.uniplaner.domain.LectureDate;
 import dhbw.vs.uniplaner.interfaces.ILectureService;
 import dhbw.vs.uniplaner.exception.BadRequestException;
 import dhbw.vs.uniplaner.exception.ResourceNotFoundException;
@@ -14,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,8 +81,4 @@ public class LectureController {
             lectureService.delete(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-
-
-
-
 }

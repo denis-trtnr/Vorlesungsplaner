@@ -1,7 +1,11 @@
 package dhbw.vs.uniplaner.domain;
 
+import dhbw.vs.uniplaner.exception.IllegalOperationException;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +30,9 @@ public class Lecture implements Serializable {
 
     @Column(name = "duration")
     private Long duration;
+
+    @Column(name = "remainingDuration")
+    private Long remainingDuration;
 
     @OneToMany(mappedBy = "title")
     private Set<LectureDate> lectureDates = new HashSet<>();
@@ -67,13 +74,23 @@ public class Lecture implements Serializable {
 
     public void setDuration(Long duration) {
         this.duration = duration;
+        this.remainingDuration = duration;
     }
 
     public Set<LectureDate> getLectureDates() {
         return lectureDates;
     }
 
-    public Lecture addLectureDate(LectureDate lectureDate) {
+    public Lecture addLectureDate(LectureDate lectureDate) throws IllegalOperationException {
+        if(!lectureDates.contains(lectureDate)) {
+            LocalDateTime d1 = lectureDate.getStart();
+            LocalDateTime d2 = lectureDate.getEnd();
+            Duration diff = Duration.between(d1,d2);
+            this.remainingDuration-=diff.toHours();
+            if(this.remainingDuration<0) {
+                throw new IllegalOperationException("You don't have enough reamining hours to plan that lecture");
+            }
+        }
         this.lectureDates.add(lectureDate);
         lectureDate.setTitle(this);
         return this;
@@ -107,6 +124,14 @@ public class Lecture implements Serializable {
 
     public void setLecturers(Set<Lecturer> lecturers) {
         this.lecturers = lecturers;
+    }
+
+    public Long getRemainingDuration() {
+        return remainingDuration;
+    }
+
+    public void setRemainingDuration(Long remainingDuration) {
+        this.remainingDuration = remainingDuration;
     }
 
     public Course getCourse() {
