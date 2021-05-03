@@ -7,6 +7,9 @@ import dhbw.vs.uniplaner.repository.LectureDateRepository;
 import dhbw.vs.uniplaner.repository.LecturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,16 +44,16 @@ public class CalendarController {
         return "calendar_view";
 }
 
-    @RequestMapping("/tutorCourseCalendar/{courseId}/{lecturerId}")
-    public String tutorCalendar(Model model, @PathVariable("courseId") Long courseId, @PathVariable("lecturerId") Long lecturerId) {
+    @RequestMapping("/tutorCourseCalendar/{courseId}")
+    @PreAuthorize("hasAuthority('ROLE_LECTURER')")
+    public String tutorCalendar(Model model, @PathVariable("courseId") Long courseId, @AuthenticationPrincipal UserDetails userDetails) {
         Optional<Course> findCourse = courseService.findOne(courseId);
         findCourse.ifPresent(course -> model.addAttribute("course", course));
-        Optional<Lecturer> findLecturer = lecturerService.findOne(lecturerId);
-        findLecturer.ifPresent(lecturer -> model.addAttribute("lecturer", lecturer));
+        Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
+        model.addAttribute("lecturer", lecturer);
 
         //Lecturer lecturer = lecturerRepository.getOne(lecturerId);
-        Optional<Lecturer> lecturer = lecturerService.findOne(lecturerId);
-        Set<Lecture> lectures = lecturer.orElseThrow(RuntimeException::new).getLectures();
+        Set<Lecture> lectures = lecturer.getLectures();
         Set<Lecture> correctLectures = new HashSet<>();
         for(Lecture lecture : lectures) {
             if(lecture.getCourse().getId() == (courseId)) {

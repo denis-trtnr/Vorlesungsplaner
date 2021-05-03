@@ -14,7 +14,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a class="nav-item nav-link active" th:href="@{/dozentenboard(email=${#authentication.name})} ">TutorBoard</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
             <!--<a class="nav-item nav-link" th:href="@{/tutor-calendar}">TutorBoard</a> -->
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
@@ -44,7 +44,7 @@
 <!--</div>-->
 <div th:each="course : ${courses}" >
     <h2 th:text="${course.courseName}"></h2>
-    <a th:href="@{/tutorCourseCalendar/{courseId}/{lecturerId} (courseId = ${course.id}, lecturerId = ${lecturer.id})}">
+    <a th:href="@{/tutorCourseCalendar/{courseId} (courseId = ${course.id})}">
         <button class="btn btn-dark">edit course</button>
     </a>
 

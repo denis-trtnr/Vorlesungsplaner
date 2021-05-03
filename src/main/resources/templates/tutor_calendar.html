@@ -14,7 +14,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a class="nav-item nav-link active" th:href="@{/dozentenboard(email=${#authentication.name})} ">TutorBoard</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
     </div>
@@ -32,7 +32,6 @@
         <div class="col-3">
             <h3>Neuer Termin:</h3><br/><br/>
             <form action="#" th:action="@{/save-lecturedate}" th:object="${lecturedate}" method="post">
-                <input type="hidden" name="lecturerId" th:value="${lecturer.id}">
                 <select class="form-control-selectpicker" name="lectureId">
                     <option th:each="lec : ${lectures}" th:value="${lec.id}" th:text="${lec.lectureName}"></option>
                 </select>

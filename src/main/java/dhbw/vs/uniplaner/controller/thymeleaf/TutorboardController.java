@@ -7,6 +7,9 @@ import dhbw.vs.uniplaner.interfaces.ILectureDateService;
 import dhbw.vs.uniplaner.interfaces.ILectureService;
 import dhbw.vs.uniplaner.interfaces.ILecturerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,32 +30,20 @@ public class TutorboardController {
     @Autowired
     private ILecturerService lecturerService;
 
-//    @GetMapping("/tutorCourseCalendar/{id}")
-//    public  String tutorCalendar(Model model) {
-//        LectureDate lecturedate = new LectureDate();
-//        model.addAttribute("lecturedate", lecturedate);
-//        return "tutor_calendar";
-//    }
-//    @RequestMapping("/tutor-calendar-course/{id}")
-//    public  String tutorCalendar(Model model, @PathVariable("id") Long id) {
-//        Optional<Course> findCourse = courseService.findOne(id);
-//        findCourse.ifPresent(course -> model.addAttribute("course", course));
-//        return "tutor_calendar";
-//}
-
     @PostMapping("/save-lecturedate")
-    public RedirectView saveLectureDate(@ModelAttribute LectureDate lecturedate, @RequestParam(value = "lectureId", required = false) Long lectureId, @RequestParam(value = "lecturerId", required = false) Long lecturerId) throws IllegalOperationException {
+    @PreAuthorize("hasAuthority('ROLE_LECTURER')")
+    public RedirectView saveLectureDate(@ModelAttribute LectureDate lecturedate, @RequestParam(value = "lectureId", required = false) Long lectureId, @AuthenticationPrincipal UserDetails userDetails) throws IllegalOperationException {
 
         Lecture lecture = lectureService.findOne(lectureId).orElseThrow(RuntimeException::new);
         lecture.addLectureDate(lecturedate);
-        Lecturer lecturer = lecturerService.findOne(lecturerId).orElseThrow(RuntimeException::new);
+        Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         lecturer.addLectureDate(lecturedate);
 
         lectureDateService.save(lecturedate);
 
         Long courseId = lecture.getCourse().getId();
 
-        String redirect = "/tutorCourseCalendar/" + courseId + "/" + lecturerId;
+        String redirect = "/tutorCourseCalendar/" + courseId;
         return new RedirectView(redirect);
     }
 }

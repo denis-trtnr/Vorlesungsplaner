@@ -7,7 +7,11 @@ import dhbw.vs.uniplaner.domain.Lecturer;
 import dhbw.vs.uniplaner.interfaces.ICourseService;
 import dhbw.vs.uniplaner.interfaces.IDegreeProgramService;
 import dhbw.vs.uniplaner.interfaces.ILecturerService;
+import dhbw.vs.uniplaner.web.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +29,9 @@ public class DozentenOverview {
     private ILecturerService lecturerService;
 
     @GetMapping("/dozentenboard")
-    public String userIndex(Model model, @RequestParam(value="email",required=true) String email) {
-
-        Lecturer lecturer = lecturerService.findByEmail(email);
+    @PreAuthorize("hasAuthority('ROLE_LECTURER')")
+    public String dozentenboard(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         Set<Lecture> lectures = lecturer.getLectures();
         Set<Course> courses = new HashSet<>();
         Course course = new Course();
@@ -42,5 +46,4 @@ public class DozentenOverview {
         model.addAttribute("lecturer", lecturer);
         return "dozent_overview";
     }
-
 }

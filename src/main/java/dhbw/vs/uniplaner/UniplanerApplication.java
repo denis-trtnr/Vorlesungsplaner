@@ -19,6 +19,7 @@ import java.time.Month;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 @SpringBootApplication
 public class UniplanerApplication implements CommandLineRunner {
@@ -50,6 +51,8 @@ public class UniplanerApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		roleService.createRoles();
+
+		TreeMap<Long,TreeMap<Long,Lecture>> hello;
 
 		Course course = new Course();
 		Lecture lecture1 = new Lecture();
