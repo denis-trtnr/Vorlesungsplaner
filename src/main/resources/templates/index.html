@@ -9,7 +9,7 @@
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div sec:authorize="isAuthenticated()">Authenticated as <span sec:authentication="name"></span></div>
-    <a th:text="Dozent" th:href="@{/dozentenboard(email=${#authentication.name})} "></a>
+    <a class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">

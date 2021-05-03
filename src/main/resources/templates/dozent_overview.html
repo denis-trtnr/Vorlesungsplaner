@@ -13,8 +13,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link active" th:href="@{/home}">Home</a>
-            <a class="nav-item nav-link" th:href="@{/dozentenboard(email=${#authentication.name})} ">TutorBoard</a>
+            <a class="nav-item nav-link" th:href="@{/home}">Home</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
             <!--<a class="nav-item nav-link" th:href="@{/tutor-calendar}">TutorBoard</a> -->
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
@@ -25,22 +25,38 @@
 </nav> <br/>
 <h1 th:text="|Hello ${lecturer.firstName} ${lecturer.lastName}|"></h1>
 <br/><br/>
-<div th:each="course: ${courses}">
-    <div>
-    <a th:text="${course.courseName}"></a>
-    <a th:href="@{/courseCalendar/{id} (id = ${course.id})}">
-        <button class="btn btn-dark">Go to planning</button> <br/><br/>
+<!--<div th:each="course: ${courses}">-->
+<!--    <div>-->
+<!--    <a th:text="${course.courseName}"></a>-->
+<!--    <a th:href="@{/courseCalendar/{id} (id = ${course.id})}">-->
+<!--        <button class="btn btn-dark">Go to planning</button> <br/><br/>-->
+<!--    </a>-->
+<!--    </div>-->
+<!--    <div th:each="lecture : ${lectures}">-->
+<!--        <div th:if="${lecture.course == course}">-->
+<!--            <tr>-->
+<!--                <td th:text="${lecture.lectureName}"></td>-->
+<!--                <td th:text="|${lecture.remainingDuration} unplanned hours|"></td>-->
+<!--                <td><button>Finish planning</button></td>-->
+<!--            </tr>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<div th:each="course : ${courses}" >
+    <h2 th:text="${course.courseName}"></h2>
+    <a th:href="@{/tutorCourseCalendar/{courseId} (courseId = ${course.id})}">
+        <button class="btn btn-dark">edit course</button>
     </a>
-    </div>
+
+    <hr>
     <div th:each="lecture : ${lectures}">
         <div th:if="${lecture.course == course}">
             <tr>
                 <td th:text="${lecture.lectureName}"></td>
                 <td th:text="|${lecture.remainingDuration} unplanned hours|"></td>
-                <td><button>Finish planning</button></td>
             </tr>
         </div>
-    </div>
+    </div> <br/><br/>
 </div>
 </body>
 </html>

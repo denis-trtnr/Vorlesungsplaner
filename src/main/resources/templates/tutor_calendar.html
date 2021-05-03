@@ -14,7 +14,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a class="nav-item nav-link" th:href="@{/dozentenboard(email=${#authentication.name})} ">TutorBoard</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
     </div>
@@ -22,8 +22,8 @@
         <a class="nav-item nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Log-Out</a>
     </div>
 </nav> <br/>
-<h2>Tutor-Calendar of Course:</h2>
-<p> 28 of 36 hours planned</p> <br/>
+<h2 th:text="${course.courseName}"></h2>
+<p>28 of 36 hours planned</p> <br/>
 <div class="container">
     <div class="row">
         <div class="col-9">
@@ -31,10 +31,17 @@
         </div>
         <div class="col-3">
             <h3>Neuer Termin:</h3><br/><br/>
-            <form action="#" method="post" th:action="@{/save-lecturedate}" th:object="${lecturedate}">
-                <p>Start: <input th:field="*{start}" type="datetime-local" /></p>
-                <p>End: <input th:field="*{end}" type="datetime-local" /></p>
-                <p><input type="submit" value="Add Event" /> <input type="reset" value="Reset" /></p>
+            <form action="#" th:action="@{/save-lecturedate}" th:object="${lecturedate}" method="post">
+                <select class="form-control-selectpicker" name="lectureId">
+                    <option th:each="lec : ${lectures}" th:value="${lec.id}" th:text="${lec.lectureName}"></option>
+                </select>
+                <div>
+                    <label for="startlecturedate">Start</label><br/>
+                    <input type="datetime-local" id="startlecturedate" th:field="*{start}"><br/><br/>
+                    <label for="endlecturedate">End</label><br/>
+                    <input type="datetime-local" id="endlecturedate" th:field="*{end}"><br/><br/>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Event</button>
             </form>
         </div>
     </div>

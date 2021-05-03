@@ -11,6 +11,6 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public interface LectureDateRepository extends JpaRepository<LectureDate, Long> {
 
-    @Query("SELECT t FROM LectureDate t WHERE t.title.courseLecture.id = ?1")
+    @Query("SELECT t FROM LectureDate t WHERE t.lecture.courseLecture.id = ?1")
     ArrayList<LectureDate> findByCourse(Long courseId);
 }

@@ -1,9 +1,6 @@
 package dhbw.vs.uniplaner.service;
 
 
-import dhbw.vs.uniplaner.domain.Course;
-import dhbw.vs.uniplaner.domain.Lecture;
-import dhbw.vs.uniplaner.domain.UniUser;
 import dhbw.vs.uniplaner.interfaces.ILecturerService;
 import dhbw.vs.uniplaner.repository.LecturerRepository;
 import dhbw.vs.uniplaner.domain.Lecturer;
