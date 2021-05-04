@@ -1,6 +1,7 @@
 package dhbw.vs.uniplaner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,9 +23,11 @@ public class Semester implements Serializable {
     @Column(name = "number")
     private Integer number;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "startDate")
     private LocalDate startDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "endDate")
     private LocalDate endDate;
 

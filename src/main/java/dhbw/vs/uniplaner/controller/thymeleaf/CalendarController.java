@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.*;
 
@@ -47,8 +48,27 @@ public class CalendarController {
     @RequestMapping("/tutorCourseCalendar/{courseId}")
     @PreAuthorize("hasAuthority('ROLE_LECTURER')")
     public String tutorCalendar(Model model, @PathVariable("courseId") Long courseId, @AuthenticationPrincipal UserDetails userDetails) {
-        Optional<Course> findCourse = courseService.findOne(courseId);
-        findCourse.ifPresent(course -> model.addAttribute("course", course));
+        Course course = courseService.findOne(courseId).orElseThrow(RuntimeException::new);
+        if(!userDetails.getUsername().equals(course.getPlaningOrder().get(0).getEmail())){
+            Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
+            Set<Lecture> lectures = lecturer.getLectures();
+            Set<Course> courses = new HashSet<>();
+            Course courseNew = new Course();
+            for(Lecture lecture : lectures) {
+                courses.add(lecture.getCourse());
+            }
+            Lecture lecture = new Lecture();
+            model.addAttribute("course",courseNew);
+            model.addAttribute("lecture",lecture);
+            model.addAttribute("courses",courses);
+            model.addAttribute("lectures", lectures);
+            model.addAttribute("lecturer", lecturer);
+            Boolean access = true;
+            model.addAttribute("access", access);
+            return "dozent_overview";
+        }
+
+        model.addAttribute("course", course);
         Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         model.addAttribute("lecturer", lecturer);
 

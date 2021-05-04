@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,6 +44,28 @@ public class Course implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="degreeProgram_id")
     private DegreeProgram degreeProgram;
+
+    @OneToOne
+    private Semester planingSemester;
+    @OneToMany
+    private List<Lecturer> planingOrder;
+
+
+    public Semester getPlaningSemester() {
+        return planingSemester;
+    }
+
+    public void setPlaningSemester(Semester planingSemester) {
+        this.planingSemester = planingSemester;
+    }
+
+    public List<Lecturer> getPlaningOrder() {
+        return planingOrder;
+    }
+
+    public void setPlaningOrder(List<Lecturer> planingOrder) {
+        this.planingOrder = planingOrder;
+    }
 
 
     private Long degreeProgramID;
