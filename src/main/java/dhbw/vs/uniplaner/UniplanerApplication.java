@@ -114,11 +114,11 @@ public class UniplanerApplication implements CommandLineRunner {
 		Set<LectureDate> lectureDatesSet1 = createListOfDates(4);
 
 		//Erstelle Dozent und füg ihn zur List hinzu
-		Lecturer dozent1 = createDozent("e","e","e","e");
-		Lecturer dozent2 = createDozent("f","f","f","f");
-		Lecturer lecturer = createDozent("basti", "Richter", "basti@gmx.com", "b");
-		Lecturer lecturer1 = createDozent("Erich", "Heumüller", "erich@gmx.com", "q");
-		Lecturer lecturer2 = createDozent("Thomas", "Specht", "thomas@gmx.com", "t");
+		Lecturer dozent1 = createDozent("Max","Mustermann","dozent1@gmail.com","123");
+		Lecturer dozent2 = createDozent("Maria","Musterfrau","dozent2@gmail.com","123");
+		Lecturer lecturer = createDozent("basti", "Richter", "basti@gmx.com", "123");
+		Lecturer lecturer1 = createDozent("Erich", "Heumüller", "erich@gmx.com", "123");
+		Lecturer lecturer2 = createDozent("Thomas", "Specht", "thomas@gmx.com", "123");
 		Set<Lecturer> dozenten_1 = new HashSet<>();
 		dozenten_1.add(dozent1);
 		dozenten_1.add(dozent2);

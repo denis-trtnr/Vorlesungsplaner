@@ -2,6 +2,7 @@ package dhbw.vs.uniplaner.service;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import dhbw.vs.uniplaner.domain.*;
+import dhbw.vs.uniplaner.interfaces.IEmailSender;
 import dhbw.vs.uniplaner.interfaces.IRoleService;
 import dhbw.vs.uniplaner.repository.*;
 import dhbw.vs.uniplaner.web.UserRegistrationDto;
@@ -37,6 +38,8 @@ public class UserService implements IUserService {
 
     @Autowired
     private IRoleService roleService;
+    @Autowired
+    private IEmailSender emailSender;
 
 
     public UniUser findByEmail(String email) {
