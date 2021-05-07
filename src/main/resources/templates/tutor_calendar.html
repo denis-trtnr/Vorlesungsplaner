@@ -11,14 +11,14 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="collapse navbar-collapse mx-sm-2" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
             <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link active" th:href="@{/dozentenboard}">TutorBoard</a>
-            <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
+            <a class="nav-item nav-link" th:href="@{/adminboard}">AdminBoard</a>
         </div>
     </div>
-    <div class="navbar-nav ml-auto mx-sm-2">
+    <div class="navbar-nav ml-auto">
         <a class="nav-item nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Log-Out</a>
     </div>
 </nav> <br/>
@@ -26,6 +26,10 @@
 <div class="container-fluid">
     <div class="row">
         <h2 th:text="${course.courseName}" class="mx-sm-4"></h2>
+    </div>
+    <div th:if="${dateOverlap}">
+        <div class="alert alert-danger">Der Termin konnte nicht angelegt werden, da sicher mit einem andern überschneidet.
+        </div>
     </div>
     <div class="row">
         <div class="col-9 px-5 pt-4">
