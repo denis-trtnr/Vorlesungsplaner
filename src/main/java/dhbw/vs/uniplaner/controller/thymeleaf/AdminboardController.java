@@ -7,12 +7,11 @@ import dhbw.vs.uniplaner.interfaces.IDegreeProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.model.IModel;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -34,16 +33,33 @@ public String listCourses(Model model) {
 }
 
     @PostMapping("/save-degreeprogram")
-    public String saveDegreeProgram(@ModelAttribute DegreeProgram degreeprogram) {
-        degreeProgramService.save(degreeprogram);
+    public String saveDegreeProgram(@ModelAttribute DegreeProgram degreeprogram,
+                                    RedirectAttributes redir) {
+        if (degreeprogram.getName().trim().length() <= 0 || degreeprogram.getShortName().trim().length() <= 0){
+            Boolean stringJustSpace = true;
+            redir.addFlashAttribute("stringJustSpace", stringJustSpace);
+        } else {
+            degreeProgramService.save(degreeprogram);
+        }
+
         return "redirect:/overview";
     }
 
     @PostMapping("/save-course")
-    public String saveCourse(@ModelAttribute Course course) {
-        Optional<DegreeProgram> degreeProgram = degreeProgramService.findOne(course.getDegreeProgramID());
-        degreeProgram.ifPresent(course::setDegreeProgram);
-        courseService.save(course);
+    public String saveCourse(@RequestParam(value = "programId", required = false) Long programId,
+                             @ModelAttribute Course course,
+                             RedirectAttributes redir) {
+        if(course.getStartDate().isAfter(course.getEndDate()) ||course.getStartDate().isEqual(course.getEndDate())){
+            Boolean endIsBeforeStart = true;
+            redir.addFlashAttribute("endIsBeforeStart", endIsBeforeStart);
+        }else if (course.getCourseName().trim().length() <= 0){
+            Boolean stringJustSpace = true;
+            redir.addFlashAttribute("stringJustSpace", stringJustSpace);
+        } else {
+            Optional<DegreeProgram> degreeProgram = degreeProgramService.findOne(programId);
+            degreeProgram.ifPresent(course::setDegreeProgram);
+            courseService.save(course);
+        }
         return "redirect:/overview";
     }
 
