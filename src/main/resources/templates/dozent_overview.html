@@ -46,11 +46,15 @@
 <!--    <h1>Thymeleaf Fragments sample</h1>-->
 <!--</div>-->
 <div th:if="${access}">
-    <div class="alert alert-danger">Du haben keine Zugriff auf Planung, weil gerade nicht dran
+    <div class="alert alert-danger">Du hast keinen Zugriff auf die Planung, weil du gerade nicht dran bist
     </div>
 </div>
 <div th:if="${noPlaning}">
     <div class="alert alert-danger">Der Planungsprozess ist aktuell noch nicht gestartet
+    </div>
+</div>
+<div th:if="${param.error}">
+    <div class="alert alert-danger">Der Plannungsprozess kann nicht beedet werden, da Sie nicht dran sind.
     </div>
 </div>
 <div th:each="course : ${courses}" >
@@ -58,16 +62,21 @@
     <a th:href="@{/tutorCourseCalendar/{courseId} (courseId = ${course.id})}">
         <button class="btn btn-dark">edit course</button>
     </a>
-
+    <a th:href="@{/finish-planning/{courseId} (courseId = ${course.id})}">
+        <button class="btn btn-dark">Finish Planning</button>
+    </a>
     <hr>
-    <div th:each="lecture : ${lectures}">
-        <div th:if="${lecture.course == course}">
-            <tr>
-                <td th:text="${lecture.lectureName}"></td>
-                <td th:text="|${lecture.remainingDuration} unplanned hours|"></td>
-            </tr>
-        </div>
-    </div> <br/><br/>
+    <div>
+    <table>
+        <tr th:each="lecture : ${lectures}">
+            <div th:if="${lecture.course == course}">
+            <td th:text="${lecture.lectureName}" width="60%">       </td>
+            <td th:text="|${lecture.remainingDuration} unplanned hours|"></td>
+            </div>
+        </tr>
+    </table>
+    </div>
+    <br/><br/>
 </div>
 </body>
 </html>

@@ -94,7 +94,6 @@ public class UniplanerApplication implements CommandLineRunner {
 
 		lecture1 =lectureRepository.save(lecture1);
 		course = courseRepository.save(course);
-		course2 = courseRepository.save(course2);
 		System.out.println("course="+ course.toString());
 		System.out.println("course="+ course2.toString());
 		System.out.println("lecture="+ lecture1.toString());
@@ -110,8 +109,14 @@ public class UniplanerApplication implements CommandLineRunner {
 		lectureX.setDuration(53L);
 		course.addLecture(lectureX);
 
+		Lecture lectureZ = new Lecture();
+		lectureZ.setLectureName("Test");
+		lectureZ.setDuration(53L);
+		course2.addLecture(lectureZ);
+
 		//Create random Dates to lecture
 		Set<LectureDate> lectureDatesSet1 = createListOfDates(4);
+		Set<LectureDate> lectureDatesSet2 = createListOfDates(5);
 
 		//Erstelle Dozent und füg ihn zur List hinzu
 		Lecturer dozent1 = createDozent("Max","Mustermann","dozent1@gmail.com","123");
@@ -129,6 +134,9 @@ public class UniplanerApplication implements CommandLineRunner {
 		//Map die drei zusammen
 		mapLs(lecture, lectureDatesSet1, dozenten_1);
 		mapLs(lectureX, lectureDatesSet1, dozenten_1);
+		mapLs(lectureZ, lectureDatesSet2, dozenten_1);
+
+		lecturerRepository.saveAll(dozenten_1);
 	}
 
 	private void mapLs(Lecture lecture, Set<LectureDate> lectureDates, Set<Lecturer> lecturers) throws IllegalOperationException {
@@ -140,7 +148,6 @@ public class UniplanerApplication implements CommandLineRunner {
 				lecturer.addLectureDate(lectureDate);
 				lectureDateRepository.save(lectureDate);
 			}
-			lecturerRepository.save(lecturer);
 		}
 	}
 
@@ -160,7 +167,7 @@ public class UniplanerApplication implements CommandLineRunner {
 		user.setFirstName(firstname);
 		user.setLastName(lastname);
 		user.setEmail(email);
-		user.setPassword(passwordEncoder.encode(password));;
+		user.setPassword(passwordEncoder.encode(password));
 		user.addRole(role);
 		userRepository.save(user);
 	}

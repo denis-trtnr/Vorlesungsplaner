@@ -47,7 +47,8 @@ public class Course implements Serializable {
 
     @OneToOne
     private Semester planingSemester;
-    @OneToMany
+
+    @ManyToMany
     private List<Lecturer> planingOrder;
 
 
@@ -163,6 +164,9 @@ public class Course implements Serializable {
         return 31;
     }
 
+    public void doSome() {
+        planingOrder.notify();
+    }
 
     @Override
     public String toString() {
