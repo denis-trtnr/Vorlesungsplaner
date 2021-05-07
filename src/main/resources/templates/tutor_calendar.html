@@ -11,30 +11,33 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse mx-sm-2" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link active" th:href="@{/dozentenboard}">TutorBoard</a>
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
     </div>
-    <div class="navbar-nav ml-auto">
+    <div class="navbar-nav ml-auto mx-sm-2">
         <a class="nav-item nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Log-Out</a>
     </div>
 </nav> <br/>
-<h2 th:text="${course.courseName}"></h2>
-<p>28 of 36 hours planned</p> <br/>
-<div class="container">
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-9">
-            <div id="courseCalendar"></div>
+        <h2 th:text="${course.courseName}" class="mx-sm-4"></h2>
+    </div>
+    <div class="row">
+        <div class="col-9 px-5 pt-4">
+            <div id="courseCalendar" class="px-5"></div>
         </div>
-        <div class="col-3">
-            <h3>Neuer Termin:</h3><br/><br/>
+        <div class="col-3 pt-5">
+            <h3 class="pt-5">New Lecture Date</h3>
             <form action="#" th:action="@{/save-lecturedate}" th:object="${lecturedate}" method="post">
-                <select class="form-control-selectpicker" name="lectureId">
+                <label for="lecture-select">Lecture</label><br/>
+                <select id="lecture-select" class="form-control-selectpicker" name="lectureId">
                     <option th:each="lec : ${lectures}" th:value="${lec.id}" th:text="${lec.lectureName}"></option>
-                </select>
+                </select><br/><br/>
                 <div>
                     <label for="startlecturedate">Start</label><br/>
                     <input type="datetime-local" id="startlecturedate" th:field="*{start}"><br/><br/>
@@ -42,7 +45,98 @@
                     <input type="datetime-local" id="endlecturedate" th:field="*{end}"><br/><br/>
                 </div>
                 <button type="submit" class="btn btn-primary">Add Event</button>
-            </form>
+            </form><br/><br/>
+            <h3 class="pt-5">Lectures to Plan</h3>
+            <table class="table">
+                <tr>
+                    <th class="px-0">Lecture</th>
+                    <th class="px-0">Unplanned hours</th>
+                </tr>
+                <tr th:each="lecture : ${lectures}" th:if="${lecture.course == course}">
+                    <td th:text="${lecture.lectureName}" class="px-0"></td>
+                    <td th:text="|${lecture.remainingDuration} unplanned hours|" class="px-0"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row py-3">
+        <div class="col-9 table-responsive px-5">
+            <div class="px-5">
+<!--            <table class="table">-->
+<!--                <tr>-->
+<!--                    <th>Lecture Name</th>-->
+<!--                    <th>Date</th>-->
+<!--                    <th>Start</th>-->
+<!--                    <th>End</th>-->
+<!--&lt;!&ndash;                    <th>Duration</th>&ndash;&gt;-->
+<!--                    <th></th>-->
+<!--                    <th></th>-->
+<!--                </tr>-->
+<!--                <tr th:each="lectureDate : ${lectureDates}">-->
+<!--                    <td th:text="${lectureDate.title}"></td>-->
+<!--                    <td th:text="${#temporals.format(lectureDate.start, 'dd-MM-yyy')}"></td>-->
+<!--                    <td th:text="${#temporals.format(lectureDate.start, 'HH:mm')}"></td>-->
+<!--                    <td th:text="${#temporals.format(lectureDate.end, 'HH:mm')}"></td>-->
+<!--&lt;!&ndash;                    <td th:text="${lectureDate.end - lectureDate.start}"></td>&ndash;&gt;-->
+<!--                    <td>-->
+<!--                        <a th:href="@{/update-lectureDate(idLecture = ${lectureDate.id}, idCourse=${course.id})}">-->
+<!--                            <button type="button" class="btn btn-secondary">Edit</button>-->
+<!--                        </a>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <a th:href="@{/remove-lectureDate(idCourse=${course.id}, idLectureDate = ${lectureDate.id})}">-->
+<!--                            <button type="button" class="btn btn-danger">Delete</button>-->
+<!--                        </a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--            </table>-->
+            <table class="table">
+                <tr>
+                    <th>Lecture Name</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr th:each="lectureDate : ${lectureDates}">
+                    <form action="#" th:action="@{/update-lecturedate}" method="post">
+                        <input type="hidden" name="courseId" th:value="${course.id}">
+                        <input type="hidden" name="lectureDateId" th:value="${lectureDate.id}">
+                        <td>
+                            <select id="edit_lecture-select" class="form-control-selectpicker" name="lectureId_edit">
+                                <option th:each="lec : ${lectures}" th:value="${lec.id}" th:text="${lec.lectureName}" th:selected="${lec.lectureName == lectureDate.title}"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="datetime-local" th:value="${lectureDate.start}" name="start_edit">
+                        </td>
+                        <td>
+                            <input type="datetime-local" th:value="${lectureDate.end}" name="end_edit">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-success">Edit</button>
+                        </td>
+                    </form>
+                    <td>
+                        <a th:href="@{/remove-lectureDate(lectureDateId = ${lectureDate.id}, courseId=${course.id})}">
+                            <button type="button" class="btn btn-danger">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </div>
+        <div class="col-3 table-responsive">
+<!--            <div th:each="lecture : ${lectures}" class="mx-sm-4">-->
+<!--                <div th:if="${lecture.course == course}">-->
+<!--                    <table class="table">-->
+<!--                        <tr>-->
+<!--                            <td th:text="${lecture.lectureName}"></td>-->
+<!--                            <td th:text="|${lecture.remainingDuration} unplanned hours|"></td>-->
+<!--                        </tr>-->
+<!--                    </table>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
 </div>

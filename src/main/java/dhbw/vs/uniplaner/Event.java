@@ -1,20 +1,26 @@
 package dhbw.vs.uniplaner;
 
+import java.time.LocalDateTime;
+
 public class Event {
+    private Long id;
     private String title;
-    private String start;
-    private String end;
+    private LocalDateTime start;
+    private LocalDateTime end;
 
     public Event() {
 
     }
 
-    public Event(String title, String start, String end) {
+    public Event(Long id, String title, LocalDateTime start, LocalDateTime end) {
+        this.id = id;
         this.title = title;
         this.start = start;
         this.end = end;
     }
 
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id;}
 
     public String getTitle() {
         return title;
@@ -23,17 +29,17 @@ public class Event {
         this.title = title;
     }
 
-    public String getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
-    public void setStart(String start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public String getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
-    public void setEnd(String end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 }

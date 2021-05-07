@@ -32,6 +32,7 @@ public class CalendarController {
     private LectureDateRepository lectureDateRepository;
     private LecturerRepository lecturerRepository;
     private Long currentCourse = 0L;
+    private Long currentTutor = 0L;
 
     public CalendarController(LectureDateRepository lectureDateRepository) {
         this.lectureDateRepository = lectureDateRepository;
@@ -48,7 +49,12 @@ public class CalendarController {
     @GetMapping("/dozentenboard")
     @PreAuthorize("hasAuthority('ROLE_LECTURER')")
     public String dozentenboard(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
         Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
+        System.out.println("T1" + lecturer.getId());
+        this.currentTutor = lecturer.getId();
+        System.out.println("T2" + currentTutor);
+
         Set<Lecture> lectures = lecturer.getLectures();
         Set<Course> courses = new HashSet<>();
         Course course = new Course();
@@ -67,47 +73,62 @@ public class CalendarController {
     @RequestMapping("/tutorCourseCalendar/{courseId}")
     @PreAuthorize("hasAuthority('ROLE_LECTURER')")
     public String tutorCalendar(Model model, @PathVariable("courseId") Long courseId, @AuthenticationPrincipal UserDetails userDetails) {
+
+        Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
+        this.currentCourse = courseId;
+
         Course course = courseService.findOne(courseId).orElseThrow(RuntimeException::new);
         System.out.println(course.getPlaningOrder().isEmpty());
         System.out.println(course.getPlaningOrder().size());
-        if(course.getPlaningOrder().isEmpty()){
-            Boolean noPlaning = true;
-            model.addAttribute("noPlaning", noPlaning);
-            return dozentenboard(model, userDetails);
-        } else if (!userDetails.getUsername().equals(course.getPlaningOrder().get(0).getEmail())){
-            Boolean access = true;
-            model.addAttribute("access", access);
-            return dozentenboard(model, userDetails);
-        }
+//        if(course.getPlaningOrder().isEmpty()){
+//            Boolean noPlaning = true;
+//            model.addAttribute("noPlaning", noPlaning);
+//            return dozentenboard(model, userDetails);
+//        } else if (!userDetails.getUsername().equals(course.getPlaningOrder().get(0).getEmail())){
+//            Boolean access = true;
+//            model.addAttribute("access", access);
+//            return dozentenboard(model, userDetails);
+//        }
 
         model.addAttribute("course", course);
-        Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         model.addAttribute("lecturer", lecturer);
         Set<Lecture> lectures = lecturer.getLectures();
         Set<Lecture> correctLectures = new HashSet<>();
         for(Lecture lecture : lectures) {
-            if(lecture.getCourse().getId() == (courseId)) {
+            if(lecture.getCourse().getId().equals(courseId)) {
                 correctLectures.add(lecture);
             }
         }
         model.addAttribute("lectures", correctLectures);
+
+        ArrayList<LectureDate> correctLectureDates = new ArrayList<>();
+        for (Lecture lecture : correctLectures) {
+            for (LectureDate lectureDate : lecture.getLectureDates()) {
+                correctLectureDates.add(lectureDate);
+            }
+        }
+        ArrayList<Event> correctLectureEvents = lectureService.convertLectureDatesToEvents(correctLectureDates);
+        model.addAttribute("lectureDates", correctLectureEvents);
+
         LectureDate lecturedate = new LectureDate();
         model.addAttribute("lecturedate", lecturedate);
-        this.currentCourse = courseId;
         return "tutor_calendar";
     }
 
     // Hier holt sich Fullcalendar die KursEvents
-    @GetMapping(path = "/processCourse", produces = {"application/json", "text/json"})
+    @GetMapping(path = "/currentCourseEvents", produces = {"application/json", "text/json"})
     @ResponseBody
-    public ArrayList<Event> processCourse() {
+    public ArrayList<Event> getCurrentCourseEvents() {
         return lectureService.convertLectureDatesToEvents(lectureDateRepository.findByCourse(this.currentCourse));
     }
 
-//    @PostMapping("/currentCourse")
-//    public  String setAktuellerKurs(@ModelAttribute(value = "course") Course course) {
-//        this.currentCourse = course.getId();
-//        return "redirect:/courseCalendar/";
-//    }
+    // Hier holt sich Fullcalendar die TutorEvents
+    @GetMapping(path = "/currentTutorEvents", produces = {"application/json", "text/json"})
+    @ResponseBody
+    public ArrayList<Event> getCurrentTutorEvents() {
+        ArrayList<LectureDate> tutorLectureDates = new ArrayList<>();
+        tutorLectureDates.addAll(lecturerService.findOne(this.currentTutor).orElseThrow(RuntimeException::new).getLectureDates());
+        return lectureService.convertLectureDatesToEvents(tutorLectureDates);
+    }
 
 }

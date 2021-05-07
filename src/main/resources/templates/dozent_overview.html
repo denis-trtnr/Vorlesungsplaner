@@ -11,72 +11,59 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse mx-sm-2" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link active" th:href="@{/dozentenboard}">TutorBoard</a>
             <!--<a class="nav-item nav-link" th:href="@{/tutor-calendar}">TutorBoard</a> -->
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
     </div>
-    <div class="navbar-nav ml-auto">
+    <div class="navbar-nav ml-auto mx-sm-2">
         <a class="nav-item nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Log-Out</a>
     </div>
 </nav> <br/>
-<h1 th:text="|Hello ${lecturer.firstName} ${lecturer.lastName}|"></h1>
-<br/><br/>
-<!--<div th:each="course: ${courses}">-->
-<!--    <div>-->
-<!--    <a th:text="${course.courseName}"></a>-->
-<!--    <a th:href="@{/courseCalendar/{id} (id = ${course.id})}">-->
-<!--        <button class="btn btn-dark">Go to planning</button> <br/><br/>-->
-<!--    </a>-->
-<!--    </div>-->
-<!--    <div th:each="lecture : ${lectures}">-->
-<!--        <div th:if="${lecture.course == course}">-->
-<!--            <tr>-->
-<!--                <td th:text="${lecture.lectureName}"></td>-->
-<!--                <td th:text="|${lecture.remainingDuration} unplanned hours|"></td>-->
-<!--                <td><button>Finish planning</button></td>-->
-<!--            </tr>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--<div th:replace="fragments/invalidLecturer :: invalidLecturer">-->
-<!--    <h1>Thymeleaf Fragments sample</h1>-->
-<!--</div>-->
-<div th:if="${access}">
-    <div class="alert alert-danger">Du hast keinen Zugriff auf die Planung, weil du gerade nicht dran bist
-    </div>
-</div>
-<div th:if="${noPlaning}">
-    <div class="alert alert-danger">Der Planungsprozess ist aktuell noch nicht gestartet
-    </div>
-</div>
-<div th:if="${param.error}">
-    <div class="alert alert-danger">Der Plannungsprozess kann nicht beedet werden, da Sie nicht dran sind.
-    </div>
-</div>
-<div th:each="course : ${courses}" >
-    <h2 th:text="${course.courseName}"></h2>
-    <a th:href="@{/tutorCourseCalendar/{courseId} (courseId = ${course.id})}">
-        <button class="btn btn-dark">edit course</button>
-    </a>
-    <a th:href="@{/finish-planning/{courseId} (courseId = ${course.id})}">
-        <button class="btn btn-dark">Finish Planning</button>
-    </a>
-    <hr>
-    <div>
-    <table>
-        <tr th:each="lecture : ${lectures}">
-            <div th:if="${lecture.course == course}">
-            <td th:text="${lecture.lectureName}" width="60%">       </td>
-            <td th:text="|${lecture.remainingDuration} unplanned hours|"></td>
+
+<div class="container-fluid">
+    <div class="row">
+        <h1 th:text="|Hello ${lecturer.firstName} ${lecturer.lastName}|" class="mx-sm-4"></h1>
+        <br/><br/>
+        <div th:if="${access}">
+            <div class="alert alert-danger">Du hast keinen Zugriff auf die Planung, weil du gerade nicht dran bist
+        </div>
+        </div>
+        <div th:if="${noPlaning}">
+            <div class="alert alert-danger">Der Planungsprozess ist aktuell noch nicht gestartet
             </div>
-        </tr>
-    </table>
+        </div>
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">Der Plannungsprozess kann nicht beedet werden, da Sie nicht dran sind.
+            </div>
+        </div>
+        <div th:each="course : ${courses}" class="mx-sm-4" >
+            <span th:text="${course.courseName}"></span>
+            <a th:href="@{/tutorCourseCalendar/{courseId} (courseId = ${course.id})}">
+                <button class="btn btn-dark">edit course</button>
+            </a>
+            <a th:href="@{/finish-planning/{courseId} (courseId = ${course.id})}">
+                <button class="btn btn-dark">Finish Planning</button>
+            </a>
+            <hr>
+            <div>
+                <table>
+                    <tr th:each="lecture : ${lectures}">
+                        <div th:if="${lecture.course == course}">
+                            <td th:text="${lecture.lectureName}" width="60%">       </td>
+                            <td th:text="|${lecture.remainingDuration} unplanned hours|"></td>
+                        </div>
+                    </tr>
+                </table>
+            </div><br/><br/>
+        </div>
     </div>
-    <br/><br/>
+    <div id="tutorCalendar" class="row r-5"></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
+<script th:src="@{/js/script.js}"></script>
 </body>
 </html>
