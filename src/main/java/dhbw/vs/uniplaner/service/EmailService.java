@@ -1,5 +1,6 @@
 package dhbw.vs.uniplaner.service;
 
+import dhbw.vs.uniplaner.domain.Course;
 import dhbw.vs.uniplaner.interfaces.IEmailSender;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -22,13 +23,14 @@ public class EmailService implements IEmailSender {
     
     @Override
     @Async
-    public void send(String to, String name, String link) {
+    public void send(String to, String name, Course course) {
         try{
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText(buildEmail(name,link), true);
+            String link = "www.localhost:8080/dozentenboard";
+            helper.setText(buildEmail(course.getCourseName()), true);
             helper.setTo(to);
-            helper.setSubject("Plan your lecture Dates");
+            helper.setSubject("Plan your lecture Dates for "+course.getCourseName());
             helper.setFrom("admin@fallstudie.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
@@ -37,7 +39,7 @@ public class EmailService implements IEmailSender {
         }
     }
 
-    private String buildEmail(String name, String link) {
+    private String buildEmail(String name) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -93,7 +95,7 @@ public class EmailService implements IEmailSender {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi,</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> It is your turn to plan the lectures for Course " + name + ". Please click on link to the get to the planning room: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Plan now</a> </p></blockquote>\n You have two days time plan your lectures. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi,</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> It is your turn to plan the lectures for Course " + name + ".\n You have two days time plan your lectures. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

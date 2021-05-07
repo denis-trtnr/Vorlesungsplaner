@@ -142,13 +142,12 @@ public class courseViewController {
         int counts = lecturersOrder.size();
         List<Lecturer> values = course.getPlaningOrder();
         list2.put(course.getId(),values);
-        String link = "/tutorCourseCalendar/{courseId}" + courseId;
         List<Lecturer> syncedList = list2.get(course.getId());
         Thread thread = new Thread(() -> {
             synchronized (syncedList) {
                 try{
                     for(int i = 0; i<counts;i++) {
-                        emailSender.send(values.get(0).getEmail(), "Thomas",link);
+                        emailSender.send(values.get(0).getEmail(), "Thomas",course);
                         syncedList.wait(120000);
                         list2.get(course.getId()).remove(0);
                         course.setPlaningOrder(list2.get(course.getId()));
