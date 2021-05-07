@@ -87,9 +87,10 @@ public class LectureService implements ILectureService {
         ArrayList<Event> calendarEvents = new ArrayList<>();
         for (LectureDate lectureDate : lectureDates) {
             Event event = new Event();
+            event.setId(lectureDate.getId());
             event.setTitle(findOne(lectureDate.getLecture().getId()).get().getLectureName());
-            event.setStart(lectureDate.getStart().toString());
-            event.setEnd(lectureDate.getEnd().toString());
+            event.setStart(lectureDate.getStart());
+            event.setEnd(lectureDate.getEnd());
             calendarEvents.add(event);
         }
         return calendarEvents;

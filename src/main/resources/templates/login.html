@@ -12,12 +12,12 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse mx-sm-2" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <b class="text-light bg-dark"></b>
         </div>
     </div>
-    <div class="navbar-nav ml-auto">
+    <div class="navbar-nav ml-auto mx-sm-2">
         <a class="nav-item nav-link active" th:href="@{/login}">Login</a>
     </div>
 </nav> <br/>
@@ -30,8 +30,7 @@
             <h1>Login page</h1>
             <form th:action="@{/login}" method="post">
                 <div th:if="${param.error}">
-                    <div class="alert alert-danger">Invalid username or password.
-                    </div>
+                    <div class="alert alert-danger">Invalid username or password.</div>
                 </div>
                 <div th:if="${param.logout}">
                     <div class="alert alert-info">You have been logged out.</div>

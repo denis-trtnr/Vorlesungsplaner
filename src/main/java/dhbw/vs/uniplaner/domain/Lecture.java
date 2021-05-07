@@ -88,14 +88,28 @@ public class Lecture implements Serializable {
             Duration diff = Duration.between(d1,d2);
             this.remainingDuration-=diff.toHours();
             if(this.remainingDuration<0) {
-                throw new IllegalOperationException("You don't have enough reamining hours to plan that lecture");
+                throw new IllegalOperationException("You don't have enough remaining hours to plan that lecture");
             }
         }
         this.lectureDates.add(lectureDate);
         lectureDate.setLecture(this);
         return this;
     }
-    
+
+    public Lecture updateLectureDate(LectureDate lectureDate) throws IllegalOperationException {
+
+            LocalDateTime d1 = lectureDate.getStart();
+            LocalDateTime d2 = lectureDate.getEnd();
+            Duration diff = Duration.between(d1,d2);
+            this.remainingDuration-=diff.toHours();
+            if(this.remainingDuration<0) {
+                throw new IllegalOperationException("You don't have enough remaining hours to plan that lecture");
+            }
+        this.lectureDates.add(lectureDate);
+        lectureDate.setLecture(this);
+        return this;
+    }
+
     public Lecture removeLectureDate(LectureDate lectureDate) {
         this.lectureDates.remove(lectureDate);
         lectureDate.setLecture(null);

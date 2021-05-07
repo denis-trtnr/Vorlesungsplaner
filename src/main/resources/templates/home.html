@@ -11,19 +11,19 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse mx-sm-2" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link active" th:href="@{/home}">Home</a>
             <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
             <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
         </div>
     </div>
-    <div class="navbar-nav ml-auto">
+    <div class="navbar-nav ml-auto mx-sm-2">
         <a class="nav-item nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Log-Out</a>
     </div>
 </nav> <br/>
-<h2>Vorlesungspläne der DHBW Stuttgart</h2> <br/><br/>
-<div th:each="program : ${programs}" >
+<h2 class="mx-sm-4">Vorlesungspläne der DHBW Stuttgart</h2> <br/><br/>
+<div th:each="program : ${programs}" class="mx-sm-4">
     <h2 th:text="${program.name}"></h2>
     <hr>
     <div th:each="course : ${program.courses}">
