@@ -74,21 +74,23 @@ public class CalendarController {
     @PreAuthorize("hasAuthority('ROLE_LECTURER')")
     public String tutorCalendar(Model model, @PathVariable("courseId") Long courseId, @AuthenticationPrincipal UserDetails userDetails) {
 
+
+
         Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         this.currentCourse = courseId;
 
         Course course = courseService.findOne(courseId).orElseThrow(RuntimeException::new);
         System.out.println(course.getPlaningOrder().isEmpty());
         System.out.println(course.getPlaningOrder().size());
-//        if(course.getPlaningOrder().isEmpty()){
-//            Boolean noPlaning = true;
-//            model.addAttribute("noPlaning", noPlaning);
-//            return dozentenboard(model, userDetails);
-//        } else if (!userDetails.getUsername().equals(course.getPlaningOrder().get(0).getEmail())){
-//            Boolean access = true;
-//            model.addAttribute("access", access);
-//            return dozentenboard(model, userDetails);
-//        }
+        if(course.getPlaningOrder().isEmpty()){
+            Boolean noPlaning = true;
+            model.addAttribute("noPlaning", noPlaning);
+            return dozentenboard(model, userDetails);
+        } else if (!userDetails.getUsername().equals(course.getPlaningOrder().get(0).getEmail())){
+            Boolean access = true;
+            model.addAttribute("access", access);
+            return dozentenboard(model, userDetails);
+        }
 
         model.addAttribute("course", course);
         model.addAttribute("lecturer", lecturer);
@@ -119,6 +121,8 @@ public class CalendarController {
     @GetMapping(path = "/currentCourseEvents", produces = {"application/json", "text/json"})
     @ResponseBody
     public ArrayList<Event> getCurrentCourseEvents() {
+
+        Course course = courseService.findOne(currentCourse).orElseThrow(RuntimeException::new);
         return lectureService.convertLectureDatesToEvents(lectureDateRepository.findByCourse(this.currentCourse));
     }
 

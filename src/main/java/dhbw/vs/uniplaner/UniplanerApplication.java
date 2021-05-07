@@ -80,6 +80,7 @@ public class UniplanerApplication implements CommandLineRunner {
 		course2 = courseRepository.save(course2);
 		System.out.println("course="+ course2.toString());
 		//Semester
+
 		Semester semester1 = new Semester();
 		semester1.setStartDate(LocalDate.now());
 		semester1.setEndDate(LocalDate.of(2021, Month.JUNE,23));
@@ -94,6 +95,8 @@ public class UniplanerApplication implements CommandLineRunner {
 		semester2.setSemesterNumber(3L);
 		course2.addSemester(semester2);
 		semesterRepository.save(semester2);
+
+
 
 		//User
 		createUserOrAdmin("Michael","Fritz","fritz@gmail.com","123",roleService.getStudent());
