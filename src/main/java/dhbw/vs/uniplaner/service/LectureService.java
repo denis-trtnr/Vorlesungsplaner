@@ -83,7 +83,6 @@ public class LectureService implements ILectureService {
         return lectureRepository.save(savedLecture);
     }
 
-    //
     public ArrayList<Event> convertLectureDatesToEvents(ArrayList<LectureDate> lectureDates) {
         ArrayList<Event> calendarEvents = new ArrayList<>();
         for (LectureDate lectureDate : lectureDates) {

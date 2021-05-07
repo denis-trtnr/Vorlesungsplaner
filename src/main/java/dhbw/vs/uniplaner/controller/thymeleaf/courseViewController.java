@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.*;
@@ -62,18 +63,29 @@ public class courseViewController {
     @RequestMapping(value = "/save-lecture", method = RequestMethod.POST)
     public RedirectView saveLecture(@RequestParam(value = "lecturersId", required = false) List<String> lecturersId,
                               @RequestParam(value = "courseId", required = false) String courseId,
-                              @ModelAttribute Lecture lecture){
-        for (String id:lecturersId) {
-            Optional<Lecturer> lecturer = lecturerService.findOne(Long.parseLong(id));
-            lecturer.ifPresent(lecture::addLecturer);
-        }
-        lectureService.save(lecture);
-        Optional<Course> course = courseService.findOne(Long.parseLong(courseId));
-        course.ifPresent(thecourse -> courseService.update(thecourse.addLecture(lecture)));
+                              @ModelAttribute Lecture lecture,
+                                    RedirectAttributes redir,
+                                    Model model){
 
-        System.out.println(lecture);
-        String redirect = "/courseview/" + courseId;
-        return new RedirectView(redirect);
+        RedirectView redirect = new RedirectView("/courseview/" + courseId);
+
+        if (lecture.getDuration() < 0) {
+            Boolean negativeNumber = true;
+            redir.addFlashAttribute("negativeNumber",negativeNumber);
+        } else if (lecture.getLectureName().trim().length() <= 0 ||lecture.getModulName().trim().length() <= 0){
+            Boolean stringJustSpace = true;
+            redir.addFlashAttribute("stringJustSpace", stringJustSpace);
+        } else {
+            for (String id:lecturersId) {
+                Optional<Lecturer> lecturer = lecturerService.findOne(Long.parseLong(id));
+                lecturer.ifPresent(lecture::addLecturer);
+            }
+            lectureService.save(lecture);
+            Optional<Course> course = courseService.findOne(Long.parseLong(courseId));
+            course.ifPresent(thecourse -> courseService.update(thecourse.addLecture(lecture)));
+
+        }
+        return redirect;
     }
 
     @GetMapping(value = "/remove-lecture")
@@ -88,12 +100,18 @@ public class courseViewController {
 
     @PostMapping("/save-semester")
     public RedirectView saveSemester(@ModelAttribute Semester semester,
-                               @RequestParam(value = "courseId", required = false) String courseId) {
-        Optional<Course> courseToFind = courseService.findOne(Long.parseLong(courseId));
-        courseToFind.ifPresent(course -> courseService.update(course.addSemester(semester)));
-        Course course = courseToFind.orElseThrow(RuntimeException::new);
-        semester.setCourse(course);
-        semesterService.save(semester);
+                               @RequestParam(value = "courseId", required = false) String courseId,
+                                     RedirectAttributes redir) {
+        if(semester.getStartDate().isAfter(semester.getEndDate()) ||semester.getStartDate().isEqual(semester.getEndDate())){
+            Boolean endIsBeforeStart = true;
+            redir.addFlashAttribute("endIsBeforeStart",endIsBeforeStart);
+        } else {
+            Course course = courseService.findOne(Long.parseLong(courseId)).orElseThrow(RuntimeException::new);
+            courseService.update(course.addSemester(semester));
+            semester.setCourse(course);
+            semesterService.save(semester);
+        }
+
         String redirect = "/courseview/" + courseId;
         return new RedirectView(redirect);
     }
@@ -117,6 +135,7 @@ public class courseViewController {
         course.setPlaningOrder(lecturersOrder);
         course.setPlaningSemester(semester);
         courseService.update(course);
+        System.out.println(lecturersOrder);
 
         String link = "/tutorCourseCalendar/{courseId}" + courseId;
         emailSender.send(userDetails.getUsername(), buildEmail(lecturersOrder.get(0).getEmail(),link));

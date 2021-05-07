@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" rel="stylesheet">
-    <title th:text="${course.courseName}"></title>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -25,19 +24,31 @@
 </nav> <br/>
 <h1 th:text="${course.courseName}"></h1>
 
+<div th:if="${negativeNumber}">
+    <div class="alert alert-danger">Die Anzahl der Stunde war negativ
+    </div>
+</div>
+<div th:if="${endIsBeforeStart}">
+    <div class="alert alert-danger">Start Datum darf nicht gleich oder nach dem End-Datum sein. Bitte erneut eingeben.
+    </div>
+</div>
+<div th:if="${stringJustSpace}">
+    <div class="alert alert-danger">Eingaben dürfen nicht nur aus Leerzeichen bestehen.
+    </div>
+</div>
 
 <form action="#" th:action="@{/save-semester}" th:object="${semester}" method="post" id="addSemester">
     <input type="hidden" id="courseIdSemester" name="courseId" th:value="${course.id}" form="addSemester">
     <table>
         <tr>
             <td>
-                <input type="date" class="form-control" id="startDate" placeholder="Enter semester start" th:field="*{startDate}">
+                <input required type="date" class="form-control" id="startDate" placeholder="Enter semester start" th:field="*{startDate}">
             </td>
             <td>
-                <input type="date" class="form-control" id="endDate" placeholder="Enter semester end" th:field="*{endDate}">
+                <input required type="date" class="form-control" id="endDate" placeholder="Enter semester end" th:field="*{endDate}">
             </td>
             <td>
-                <input type="number" class="form-control" id="semesterNumber" placeholder="Enter semester number" th:field="*{semesterNumber}">
+                <input required min="1" type="number" class="form-control" id="semesterNumber" placeholder="Semester number" th:field="*{semesterNumber}">
             </td>
             <td>
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -45,91 +56,104 @@
         </tr>
     </table>
 </form>
+<div class="row">
+    <div class="col-7 back">
+        <form action="#" th:action="@{/save-lecture/}" th:object="${lecture}" method="post" id="my_form">
+            <input type="hidden" id="courseId" name="courseId" th:value="${course.id}" form="my_form">
+            <table class="table">
+                <tr>
+                    <th scope="col">Lecture Name</th>
+                    <th scope="col">Modul Name</th>
+                    <th scope="col">Lecturers</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col"></th>
+                </tr>
+                <tr th:each="lecturee : ${course.lectures}">
+                    <th th:text="${lecturee.lectureName}" scope="row"></th>
+                    <td th:text="${lecturee.modulName}"></td>
+                    <td>
+                        <p th:each="lecturer : ${lecturee.lecturers}" th:text="${lecturer.email}"></p>
+                    </td>
+                    <td th:text="${lecturee.duration}"></td>
+                    <td>
+                        <a th:href="@{/remove-lecture(idLecture = ${lecturee.id}, idCourse=${course.id})}">
+                            <button   type="button" class="btn btn-danger">Delete
+                            </button>
+                        </a>
+                    </td>
+                    <td>
 
-<div class="col-5 back">
-    <div class="subtitle">Reihenfolge</div>
-    <form action="#" method="POST" th:action="@{/save-planning-order}" th:object="${planForm}" id="planForm">
-        <select name="semester" >
-            <option th:each="semester : ${course.semesters}" th:text="'Semester '+ ${semester.semesterNumber}" th:value="${semester.id}"></option>
-        </select>
-        <div class="page-content page-container" id="page-content">
-            <div class="col-sm-8">
-                <div class="container-fluid d-flex justify-content-center">
-                    <ul class="list list-row card container-fluid" id="sortable" data-sortable-id="0" aria-dropeffect="move">
-                        <li class="list-item" data-id="13" draggable="true" role="option" aria-grabbed="false" style=""  th:each="lecturer : ${lecturersOrder}" th:text="${lecturer.firstName}" th:value="${lecturer.id}">
-                        </li>
-                    </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input required minlength="3" maxlength="25" type="text" id="nameLecture" placeholder="Lecture name" th:field="*{lectureName}" form="my_form">
+                    </td>
+                    <td>
+                        <input required minlength="3" maxlength="25" type="text" id="modulName" placeholder="Modul name" th:field="*{modulName}" form="my_form">
+                    </td>
+                    <td>
+                        <select required multiple id="lecturersId" name="lecturersId" form="my_form">
+                            <option  th:each="lecturer : ${lecturersList}" th:text="${lecturer.email}" th:value="${lecturer.id}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <input required type="number" min="1" id="duration" placeholder="Duration" th:field="*{duration}" form="my_form">
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary" value="value" form="my_form">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="col-1 back"></div>
+    <div class="col-4 back">
+        <div class="subtitle">Reihenfolge</div>
+        <form action="#" method="POST" th:action="@{/save-planning-order}" th:object="${planForm}" id="planForm">
+            <select required name="semester" placeholder="Semester" >
+                <option th:each="semester : ${course.semesters}" th:text="'Semester '+ ${semester.semesterNumber}" th:value="${semester.id}"></option>
+            </select>
+            <div class="page-content page-container" id="page-content">
+                <div class="col-sm-8">
+                    <div class="container-fluid d-flex justify-content-center">
+                        <ul  class="list list-row card container-fluid list-group" id="sortable" data-sortable-id="0" aria-dropeffect="move">
+                            <li class="list-item list-group-item" data-id="13" draggable="true" role="option" aria-grabbed="false" style=""  th:each="lecturer : ${lecturersOrder}" th:text="${lecturer.firstName}" th:value="${lecturer.id}">
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        <input name="lecturersOrder" value="" type="hidden" />
-        <input name="courseId" th:value="${course.id}" type="hidden" />
-        <input type="submit" class="btn btn-lg submit" name="save" value="SPEICHERN"/>
-    </form>
+            <input name="lecturersOrder" value="" type="hidden" />
+            <input name="courseId" th:value="${course.id}" type="hidden" />
+            <input type="submit" class="btn btn-lg submit" name="save" value="SPEICHERN"/>
+        </form>
+    </div>
 </div>
-
-
-
-<form action="#" th:action="@{/save-lecture/}" th:object="${lecture}" method="post" id="my_form">
-    <input type="hidden" id="courseId" name="courseId" th:value="${course.id}" form="my_form">
-<table>
-    <tr>
-        <th>Lecture Name</th>
-        <th>Modul Name</th>
-        <th>Lecturers</th>
-        <th>Duration</th>
-        <th></th>
-    </tr>
-    <tr th:each="lecturee : ${course.lectures}">
-        <td th:text="${lecturee.lectureName}"></td>
-        <td th:text="${lecturee.modulName}"></td>
-            <td>
-                <p th:each="lecturer : ${lecturee.lecturers}" th:text="${lecturer.email}"></p>
-            </td>
-        <td th:text="${lecturee.duration}"></td>
-        <td>
-            <a th:href="@{/remove-lecture(idLecture = ${lecturee.id}, idCourse=${course.id})}">
-                <button   type="button" class="btn btn-danger">Delete
-                </button>
-            </a>
-        </td>
-        <td>
-
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <input type="text" id="nameLecture" placeholder="Lecture name" th:field="*{lectureName}" form="my_form">
-        </td>
-        <td>
-            <input type="text" id="modulName" placeholder="Modul name" th:field="*{modulName}" form="my_form">
-        </td>
-        <td>
-            <select multiple id="lecturersId" name="lecturersId" form="my_form">
-                <option th:each="lecturer : ${lecturersList}" th:text="${lecturer.email}" th:value="${lecturer.id}"></option>
-            </select>
-        </td>
-        <td>
-            <input type="text" id="duration" placeholder="Duration" th:field="*{duration}" form="my_form">
-        </td>
-        <td>
-            <button type="submit" class="btn btn-primary" value="value" form="my_form">Submit</button><
-        </td>
-    </tr>
-</table>
-</form>
 
 <script>
     var $sortableList = $("#sortable");
+
+    var listElements = $sortableList.children();
+    console.log(listElements);
+    var listValues = [];
+    for (i = 0; i < listElements.length; i++) {
+        listElements.get(i).value
+        listValues.push(listElements.get(i).value);
+    }
+
+    let json = JSON.stringify(listValues);
+    $("#planForm > [name='lecturersOrder']").val(json);
+
+
+
     var sortEventHandler = function (event, ui) {
         var listElements = $sortableList.children();
         console.log(listElements);
         var listValues = [];
         for (i = 0; i < listElements.length; i++) {
-            // listElements.get(i).innerHTML
             listElements.get(i).value
             listValues.push(listElements.get(i).value);
-            // listValues.push(listElements.get(i).innerHTML);
         }
 
         let json = JSON.stringify(listValues);
@@ -139,7 +163,9 @@
         stop: sortEventHandler
     });
     // You can also set the event handler on an already existing Sortable widget this way:
+    sortEventHandler();
     $sortableList.on("sortchange", sortEventHandler);
+
 </script>
 
 </body>

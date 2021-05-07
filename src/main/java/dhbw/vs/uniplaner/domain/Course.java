@@ -67,17 +67,6 @@ public class Course implements Serializable {
         this.planingOrder = planingOrder;
     }
 
-
-    private Long degreeProgramID;
-
-    public Long getDegreeProgramID() {
-        return degreeProgramID;
-    }
-
-    public void setDegreeProgramID(Long degreeProgramID) {
-        this.degreeProgramID = degreeProgramID;
-    }
-
     public Long getId() {
         return id;
     }
