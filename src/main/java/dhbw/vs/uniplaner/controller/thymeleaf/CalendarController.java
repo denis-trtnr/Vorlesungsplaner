@@ -45,34 +45,44 @@ public class CalendarController {
         return "calendar_view";
 }
 
+    @GetMapping("/dozentenboard")
+    @PreAuthorize("hasAuthority('ROLE_LECTURER')")
+    public String dozentenboard(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
+        Set<Lecture> lectures = lecturer.getLectures();
+        Set<Course> courses = new HashSet<>();
+        Course course = new Course();
+        for(Lecture lecture : lectures) {
+            courses.add(lecture.getCourse());
+        }
+        Lecture lecture = new Lecture();
+        model.addAttribute("course",course);
+        model.addAttribute("lecture",lecture);
+        model.addAttribute("courses",courses);
+        model.addAttribute("lectures", lectures);
+        model.addAttribute("lecturer", lecturer);
+        return "dozent_overview";
+    }
+
     @RequestMapping("/tutorCourseCalendar/{courseId}")
     @PreAuthorize("hasAuthority('ROLE_LECTURER')")
     public String tutorCalendar(Model model, @PathVariable("courseId") Long courseId, @AuthenticationPrincipal UserDetails userDetails) {
         Course course = courseService.findOne(courseId).orElseThrow(RuntimeException::new);
-        if(!userDetails.getUsername().equals(course.getPlaningOrder().get(0).getEmail())){
-            Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
-            Set<Lecture> lectures = lecturer.getLectures();
-            Set<Course> courses = new HashSet<>();
-            Course courseNew = new Course();
-            for(Lecture lecture : lectures) {
-                courses.add(lecture.getCourse());
-            }
-            Lecture lecture = new Lecture();
-            model.addAttribute("course",courseNew);
-            model.addAttribute("lecture",lecture);
-            model.addAttribute("courses",courses);
-            model.addAttribute("lectures", lectures);
-            model.addAttribute("lecturer", lecturer);
+        System.out.println(course.getPlaningOrder().isEmpty());
+        System.out.println(course.getPlaningOrder().size());
+        if(course.getPlaningOrder().isEmpty()){
+            Boolean noPlaning = true;
+            model.addAttribute("noPlaning", noPlaning);
+            return dozentenboard(model, userDetails);
+        } else if (!userDetails.getUsername().equals(course.getPlaningOrder().get(0).getEmail())){
             Boolean access = true;
             model.addAttribute("access", access);
-            return "dozent_overview";
+            return dozentenboard(model, userDetails);
         }
 
         model.addAttribute("course", course);
         Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         model.addAttribute("lecturer", lecturer);
-
-        //Lecturer lecturer = lecturerRepository.getOne(lecturerId);
         Set<Lecture> lectures = lecturer.getLectures();
         Set<Lecture> correctLectures = new HashSet<>();
         for(Lecture lecture : lectures) {
@@ -81,7 +91,6 @@ public class CalendarController {
             }
         }
         model.addAttribute("lectures", correctLectures);
-
         LectureDate lecturedate = new LectureDate();
         model.addAttribute("lecturedate", lecturedate);
         this.currentCourse = courseId;

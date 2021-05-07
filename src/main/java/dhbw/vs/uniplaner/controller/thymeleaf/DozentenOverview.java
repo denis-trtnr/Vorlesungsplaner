@@ -28,22 +28,5 @@ public class DozentenOverview {
     @Autowired
     private ILecturerService lecturerService;
 
-    @GetMapping("/dozentenboard")
-    @PreAuthorize("hasAuthority('ROLE_LECTURER')")
-    public String dozentenboard(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
-        Set<Lecture> lectures = lecturer.getLectures();
-        Set<Course> courses = new HashSet<>();
-        Course course = new Course();
-        for(Lecture lecture : lectures) {
-            courses.add(lecture.getCourse());
-        }
-        Lecture lecture = new Lecture();
-        model.addAttribute("course",course);
-        model.addAttribute("lecture",lecture);
-        model.addAttribute("courses",courses);
-        model.addAttribute("lectures", lectures);
-        model.addAttribute("lecturer", lecturer);
-        return "dozent_overview";
-    }
+
 }

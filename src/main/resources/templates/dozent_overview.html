@@ -49,6 +49,10 @@
     <div class="alert alert-danger">Du haben keine Zugriff auf Planung, weil gerade nicht dran
     </div>
 </div>
+<div th:if="${noPlaning}">
+    <div class="alert alert-danger">Der Planungsprozess ist aktuell noch nicht gestartet
+    </div>
+</div>
 <div th:each="course : ${courses}" >
     <h2 th:text="${course.courseName}"></h2>
     <a th:href="@{/tutorCourseCalendar/{courseId} (courseId = ${course.id})}">
