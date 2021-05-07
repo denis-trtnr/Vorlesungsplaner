@@ -9,6 +9,8 @@ import dhbw.vs.uniplaner.interfaces.ICourseService;
 import dhbw.vs.uniplaner.interfaces.ILectureService;
 import dhbw.vs.uniplaner.interfaces.ILecturerService;
 import dhbw.vs.uniplaner.interfaces.ISemesterService;
+import dhbw.vs.uniplaner.service.LecturerService;
+import dhbw.vs.uniplaner.service.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +40,12 @@ public class courseViewController {
     ArrayList<List<Lecturer>> list1 = new ArrayList<List<Lecturer>>();
     TreeMap<Long,List<Lecturer>> list2 = new TreeMap<Long, List<Lecturer>>();
 
+    /**
+     * Call a course and adds all lectures, lecturers and semesters to the model
+     * @param model Spring MVC model Attribute
+     * @param id id is used to identify the course -> CourseId
+     * @return returns courseView template
+     */
     @RequestMapping("/courseview/{id}")
     public String courseView(Model model, @PathVariable("id") Long id) {
         Course course = courseService.findOne(id).orElseThrow(RuntimeException::new);
@@ -59,10 +67,18 @@ public class courseViewController {
         model.addAttribute("lecturersList", lecturerService.findAll());
         model.addAttribute("semester", semester);
         model.addAttribute("lecturersOrder", lecturersOrder);
-
         return "courseView";
     }
 
+    /**
+     *
+     * @param lecturersId lecturersId to identify the lecturers doing this lecture
+     * @param courseId courseId to identify the course the lecture should be added to
+     * @param lecture lecture Object, usually taken from a form
+     * @param redir RedirectAttributes object to add errors to the model temporary
+     * @param model Spring MVC model Attribute
+     * @return redirects to /courseview/{courseId}
+     */
     @RequestMapping(value = "/save-lecture", method = RequestMethod.POST)
     public RedirectView saveLecture(@RequestParam(value = "lecturersId", required = false) List<String> lecturersId,
                               @RequestParam(value = "courseId", required = false) String courseId,
@@ -90,6 +106,12 @@ public class courseViewController {
         return redirect;
     }
 
+    /**
+     * Takes a lecture which then is removed from the DB
+     * @param id the lectureId of the lecture which should deleted
+     * @param courseId last used courseId to redirect to /courseview
+     * @return redirects to /courseview/{courseId}
+     */
     @GetMapping(value = "/remove-lecture")
     public RedirectView removeLecture(@RequestParam(value = "idLecture", required = false) String id,
                                       @RequestParam(value = "idCourse", required = false) String courseId){
@@ -100,6 +122,13 @@ public class courseViewController {
         return new RedirectView(redirect);
     }
 
+    /**
+     *
+     * @param semester
+     * @param courseId
+     * @param redir
+     * @return
+     */
     @PostMapping("/save-semester")
     public RedirectView saveSemester(@ModelAttribute Semester semester,
                                @RequestParam(value = "courseId", required = false) String courseId,
@@ -117,7 +146,6 @@ public class courseViewController {
         String redirect = "/courseview/" + courseId;
         return new RedirectView(redirect);
     }
-
 
     @PostMapping("/save-planning-order")
     public RedirectView savePlanningOrder(@AuthenticationPrincipal UserDetails userDetails,
@@ -148,7 +176,7 @@ public class courseViewController {
                 try{
                     for(int i = 0; i<counts;i++) {
                         emailSender.send(values.get(0).getEmail(), "Thomas",course);
-                        syncedList.wait(120000);
+                        syncedList.wait(120000000);
                         list2.get(course.getId()).remove(0);
                         course.setPlaningOrder(list2.get(course.getId()));
                         courseService.save(course);
@@ -160,7 +188,7 @@ public class courseViewController {
             }
         });
         thread.start();
-        String redirect = "/overview";
+        String redirect = "/adminboard";
         return new RedirectView(redirect);
     }
 
@@ -169,7 +197,7 @@ public class courseViewController {
     public RedirectView finishPlanning1(@PathVariable Long courseId, @AuthenticationPrincipal UserDetails userDetails) {
         Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         Course course = courseService.findOne(courseId).orElseThrow(RuntimeException::new);
-        String redirect = "/dozentenboard";
+        String redirect = "/lecturerboard";
         if(course.getPlaningOrder().isEmpty()) {
             redirect = redirect+"?error";
         } else if(!course.getPlaningOrder().get(0).equals(lecturer)) {

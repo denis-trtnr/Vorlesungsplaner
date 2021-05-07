@@ -14,8 +14,8 @@
     <div class="collapse navbar-collapse mx-sm-2" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/dozentenboard}">TutorBoard</a>
-            <a class="nav-item nav-link active" th:href="@{/overview}">AdminBoard</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link" th:href="@{/lecturerboard}">TutorBoard</a>
+            <a class="nav-item nav-link" th:href="@{/adminboard}">AdminBoard</a>
         </div>
     </div>
     <div class="navbar-nav ml-auto mx-sm-2">
@@ -26,7 +26,6 @@
 <div class="container-fluid">
     <h1 th:text="${course.courseName}" class="mx-sm-4 mb-4"></h1>
 
-<!--    <div class="col-sm-8">-->
 
 <div th:if="${endIsBeforeStart}">
     <div class="alert alert-danger">Start Datum darf nicht gleich oder nach dem End-Datum sein. Bitte erneut eingeben.
@@ -112,7 +111,6 @@
             </table>
         </form>
     </div>
-<!--    <div class="col-md-1 col-xs-1"></div>-->
     <div class="col-md-4 col-xs-4 pe-5">
         <h5>Planungs-Reihenfolge</h5>
         <div>
@@ -120,16 +118,10 @@
             <select required name="semester" placeholder="Semester" >
                 <option th:each="semester : ${course.semesters}" th:text="'Semester '+ ${semester.semesterNumber}" th:value="${semester.id}"></option>
             </select>
-<!--            <div class="page-content page-container" id="page-content">-->
-<!--                <div class="col-sm-8">-->
-<!--                    <div class="container-fluid d-flex justify-content-center">-->
                         <ul  class="list list-row card container-fluid list-group" id="sortable" data-sortable-id="0" aria-dropeffect="move">
-                            <li class="list-item list-group-item" data-id="13" draggable="true" role="option" aria-grabbed="false" style=""  th:each="lecturer : ${lecturersOrder}" th:text="${lecturer.firstName}" th:value="${lecturer.id}">
+                            <li class="list-item list-group-item" data-id="13" draggable="true" role="option" aria-grabbed="false" style=""  th:each="lecturer : ${lecturersOrder}" th:text="${lecturer.lastName}" th:value="${lecturer.id}">
                             </li>
                         </ul>
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
             <input name="lecturersOrder" value="" type="hidden" />
             <input name="courseId" th:value="${course.id}" type="hidden" />
             <div class="px-auto pt-2">
@@ -162,10 +154,8 @@
         console.log(listElements);
         var listValues = [];
         for (i = 0; i < listElements.length; i++) {
-            // listElements.get(i).innerHTML
             listElements.get(i).value
             listValues.push(listElements.get(i).value);
-            // listValues.push(listElements.get(i).innerHTML);
         }
 
         let json = JSON.stringify(listValues);
@@ -174,7 +164,6 @@
     $sortableList.sortable({
         stop: sortEventHandler
     });
-    // You can also set the event handler on an already existing Sortable widget this way:
     sortEventHandler();
     $sortableList.on("sortchange", sortEventHandler);
 

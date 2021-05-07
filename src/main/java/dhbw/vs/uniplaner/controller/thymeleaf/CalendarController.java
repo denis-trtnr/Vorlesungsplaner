@@ -6,14 +6,12 @@ import dhbw.vs.uniplaner.interfaces.*;
 import dhbw.vs.uniplaner.repository.LectureDateRepository;
 import dhbw.vs.uniplaner.repository.LecturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.*;
 
@@ -38,18 +36,30 @@ public class CalendarController {
         this.lectureDateRepository = lectureDateRepository;
     }
 
+    /**
+     * Calls a calendar view and displays all lectureDates attached to the picked course
+     * @param model Spring MVC model Attribute
+     * @param id id is used to identify the course -> CourseId
+     * @return returns calendar_view template with a course attached to load data in to the template
+     */
     @RequestMapping("/courseCalendar/{id}")
     public String programOverview(Model model, @PathVariable("id") Long id) {
         Optional<Course> findCourse = courseService.findOne(id);
         findCourse.ifPresent(course -> model.addAttribute("course", course));
         this.currentCourse = id;
         return "calendar_view";
-}
+    }
 
-    @GetMapping("/dozentenboard")
+    /**
+     * Shows lecturers a calendar view with their lectures and their courses where they still have to plan
+     * @param model Spring MVC model Attribute
+     * @param userDetails Auto-received through Spring Security
+     * @return lecturerOverview template with object attached to load lecturer specific data
+     */
+    @GetMapping("/lecturerboard")
     @PreAuthorize("hasAuthority('ROLE_LECTURER')")
-    public String dozentenboard(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-
+    public String lecturerBoard(Model model,
+                                @AuthenticationPrincipal UserDetails userDetails) {
         Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         System.out.println("T1" + lecturer.getId());
         this.currentTutor = lecturer.getId();
@@ -67,31 +77,36 @@ public class CalendarController {
         model.addAttribute("courses",courses);
         model.addAttribute("lectures", lectures);
         model.addAttribute("lecturer", lecturer);
-        return "dozent_overview";
+        return "lecturerOverview";
     }
 
+    /**
+     * Displays a calendar view containing data for just the chosen course.
+     * The process of planning has to be started before accessing this method.
+     * New lecture dates can be edited
+     * Lecturer can edit his*her lecture dates
+     * @param model Spring MVC model Attribute
+     * @param courseId CourseId to identify and retrieve right data
+     * @param userDetails Auto-received through Spring Security
+     * @return
+     */
     @RequestMapping("/tutorCourseCalendar/{courseId}")
     @PreAuthorize("hasAuthority('ROLE_LECTURER')")
-    public String tutorCalendar(Model model, @PathVariable("courseId") Long courseId, @AuthenticationPrincipal UserDetails userDetails) {
-
-
-
+    public String tutorCalendar(Model model,
+                                @PathVariable("courseId") Long courseId,
+                                @AuthenticationPrincipal UserDetails userDetails) {
         Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
         this.currentCourse = courseId;
-
         Course course = courseService.findOne(courseId).orElseThrow(RuntimeException::new);
-        System.out.println(course.getPlaningOrder().isEmpty());
-        System.out.println(course.getPlaningOrder().size());
         if(course.getPlaningOrder().isEmpty()){
             Boolean noPlaning = true;
             model.addAttribute("noPlaning", noPlaning);
-            return dozentenboard(model, userDetails);
+            return lecturerBoard(model, userDetails);
         } else if (!userDetails.getUsername().equals(course.getPlaningOrder().get(0).getEmail())){
             Boolean access = true;
             model.addAttribute("access", access);
-            return dozentenboard(model, userDetails);
+            return lecturerBoard(model, userDetails);
         }
-
         model.addAttribute("course", course);
         model.addAttribute("lecturer", lecturer);
         Set<Lecture> lectures = lecturer.getLectures();
@@ -102,7 +117,6 @@ public class CalendarController {
             }
         }
         model.addAttribute("lectures", correctLectures);
-
         ArrayList<LectureDate> correctLectureDates = new ArrayList<>();
         for (Lecture lecture : correctLectures) {
             for (LectureDate lectureDate : lecture.getLectureDates()) {
@@ -111,22 +125,25 @@ public class CalendarController {
         }
         ArrayList<Event> correctLectureEvents = lectureService.convertLectureDatesToEvents(correctLectureDates);
         model.addAttribute("lectureDates", correctLectureEvents);
-
         LectureDate lecturedate = new LectureDate();
         model.addAttribute("lecturedate", lecturedate);
         return "tutor_calendar";
     }
 
-    // Hier holt sich Fullcalendar die KursEvents
+    /**
+     * FullCalendar API uses this method to get all lecture dates from the course
+     * @return returns lecture dates casted to event objects
+     */
     @GetMapping(path = "/currentCourseEvents", produces = {"application/json", "text/json"})
     @ResponseBody
     public ArrayList<Event> getCurrentCourseEvents() {
-
-        Course course = courseService.findOne(currentCourse).orElseThrow(RuntimeException::new);
         return lectureService.convertLectureDatesToEvents(lectureDateRepository.findByCourse(this.currentCourse));
     }
 
-    // Hier holt sich Fullcalendar die TutorEvents
+    /**
+     * FullCalendar API uses this method to get all lecture dates from the lecturer
+     * @return returns lecture dates casted to event objects
+     */
     @GetMapping(path = "/currentTutorEvents", produces = {"application/json", "text/json"})
     @ResponseBody
     public ArrayList<Event> getCurrentTutorEvents() {

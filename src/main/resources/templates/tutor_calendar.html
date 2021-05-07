@@ -14,8 +14,8 @@
     <div class="collapse navbar-collapse mx-sm-2" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link active" th:href="@{/dozentenboard}">TutorBoard</a>
-            <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link active" th:href="@{/lecturerboard}">TutorBoard</a>
+            <a class="nav-item nav-link" th:href="@{/adminboard}">AdminBoard</a>
         </div>
     </div>
     <div class="navbar-nav ml-auto mx-sm-2">
@@ -29,6 +29,10 @@
     </div>
     <div th:if="${dateOverlap}">
         <div class="alert alert-danger">Der Termin konnte nicht angelegt werden, da sicher mit einem andern überschneidet.
+        </div>
+    </div>
+    <div th:if="${outOfSemester}">
+        <div class="alert alert-danger">Der Termin konnte nicht platziert werden, da dieser sich außerhalb des Semester befindet
         </div>
     </div>
     <div class="row">

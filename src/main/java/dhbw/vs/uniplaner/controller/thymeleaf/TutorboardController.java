@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.sql.SQLOutput;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -45,10 +46,15 @@ public class TutorboardController {
                                         @AuthenticationPrincipal UserDetails userDetails) throws IllegalOperationException {
         Lecture lecture = lectureService.findOne(lectureId).orElseThrow(RuntimeException::new);
         Long courseId = lecture.getCourse().getId();
+        String redirect = "/tutorCourseCalendar/" + courseId;
+        if(lecturedate.getEnd().isBefore(lecturedate.getStart())){
+            Boolean endIsBeforeStart = true;
+            redir.addFlashAttribute("endIsBeforeStart", endIsBeforeStart);
+            return new RedirectView(redirect);
+        }
+
         Course course = courseService.findOne(courseId).orElseThrow(RuntimeException::new);
         Set<Lecture> allLectures = course.getLectures();
-        String redirect = "/tutorCourseCalendar/" + courseId;
-
         for (Lecture courseLecture: allLectures) {
             for (LectureDate courseLectureDate :courseLecture.getLectureDates()) {
                 if(lecturedate.getStart().getDayOfYear() == courseLectureDate.getEnd().getDayOfYear()
@@ -64,6 +70,15 @@ public class TutorboardController {
                     return new RedirectView(redirect);
                 }
             }
+        }
+
+        if (lecturedate.getStart().toLocalDate().isBefore(course.getPlaningSemester().getStartDate())
+                || lecturedate.getStart().toLocalDate().isAfter(course.getPlaningSemester().getEndDate())
+                || lecturedate.getEnd().toLocalDate().isAfter(course.getPlaningSemester().getEndDate())
+                || lecturedate.getEnd().toLocalDate().isBefore(course.getPlaningSemester().getStartDate())){
+            Boolean outOfSemester = true;
+            redir.addFlashAttribute("outOfSemester", outOfSemester);
+            return new RedirectView(redirect);
         }
         lecture.addLectureDate(lecturedate);
         Lecturer lecturer = lecturerService.findByEmail(userDetails.getUsername());
@@ -103,14 +118,18 @@ public class TutorboardController {
                                         @RequestParam(value = "end_edit", required = false) String end_edit,
                                         @RequestParam(value = "courseId", required = false) String courseId,
                                         RedirectAttributes redir) throws IllegalOperationException {
-
+        String redirect = "/tutorCourseCalendar/" + courseId;
         LectureDate lectureDate = lectureDateService.findOne(lectureDateId).orElseThrow(RuntimeException::new);
         LocalDateTime newStart = LocalDateTime.parse(start_edit);
         LocalDateTime newEnd = LocalDateTime.parse(end_edit);
+        if(newEnd.isBefore(newStart)){
+            Boolean endIsBeforeStart = true;
+            redir.addFlashAttribute("endIsBeforeStart", endIsBeforeStart);
+            return new RedirectView(redirect);
+        }
         System.out.println("Here");
         Course course = courseService.findOne(Long.parseLong(courseId)).orElseThrow(RuntimeException::new);
         Set<Lecture> allLectures = course.getLectures();
-        String redirect = "/tutorCourseCalendar/" + courseId;
         System.out.println("Here2");
         for (Lecture courseLecture: allLectures) {
             for (LectureDate courseLectureDate :courseLecture.getLectureDates()) {
@@ -136,6 +155,14 @@ public class TutorboardController {
                     }
                 }
             }
+        }
+        if (newStart.toLocalDate().isBefore(course.getPlaningSemester().getStartDate())
+                || newStart.toLocalDate().isAfter(course.getPlaningSemester().getEndDate())
+                || newEnd.toLocalDate().isAfter(course.getPlaningSemester().getEndDate())
+                || newEnd.toLocalDate().isBefore(course.getPlaningSemester().getStartDate())){
+            Boolean outOfSemester = true;
+            redir.addFlashAttribute("outOfSemester", outOfSemester);
+            return new RedirectView(redirect);
         }
 
         lectureDate.setStart(newStart);

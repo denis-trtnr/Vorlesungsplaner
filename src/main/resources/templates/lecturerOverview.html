@@ -14,9 +14,9 @@
     <div class="collapse navbar-collapse mx-sm-2" id="navbarSupportedContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link active" th:href="@{/dozentenboard}">TutorBoard</a>
+            <a sec:authorize="hasAuthority('ROLE_LECTURER')" class="nav-item nav-link active" th:href="@{/lecturerboard}">TutorBoard</a>
             <!--<a class="nav-item nav-link" th:href="@{/tutor-calendar}">TutorBoard</a> -->
-            <a class="nav-item nav-link" th:href="@{/overview}">AdminBoard</a>
+            <a class="nav-item nav-link" th:href="@{/adminboard}">AdminBoard</a>
         </div>
     </div>
     <div class="navbar-nav ml-auto mx-sm-2">
@@ -35,6 +35,10 @@
     </div>
     <div th:if="${param.error}">
         <div class="alert alert-danger">Der Plannungsprozess kann nicht beedet werden, da Sie nicht dran sind.
+        </div>
+    </div>
+    <div th:if="${endIsBeforeStart}">
+        <div class="alert alert-danger">Start Datum darf nicht gleich oder nach dem End-Datum sein. Bitte erneut eingeben.
         </div>
     </div>
     <div th:each="course : ${courses}" class="mx-sm-4 mb-5" >
