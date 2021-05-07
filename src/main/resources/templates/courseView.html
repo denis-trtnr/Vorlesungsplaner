@@ -22,7 +22,11 @@
         <a class="nav-item nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Log-Out</a>
     </div>
 </nav> <br/>
-<h1 th:text="${course.courseName}"></h1>
+
+<div class="container-fluid">
+    <h1 th:text="${course.courseName}" class="mx-sm-4 mb-4"></h1>
+
+<!--    <div class="col-sm-8">-->
 
 <div th:if="${endIsBeforeStart}">
     <div class="alert alert-danger">Start Datum darf nicht gleich oder nach dem End-Datum sein. Bitte erneut eingeben.
@@ -33,6 +37,9 @@
     </div>
 </div>
 
+    <div class="row pb-3 px-5">
+
+        <h5>Neues Semester anlegen:</h5>
 <form action="#" th:action="@{/save-semester}" th:object="${semester}" method="post" id="addSemester">
     <input type="hidden" id="courseIdSemester" name="courseId" th:value="${course.id}" form="addSemester">
     <table>
@@ -47,13 +54,15 @@
                 <input required min="1" type="number" class="form-control" id="semesterNumber" placeholder="Semester number" th:field="*{semesterNumber}">
             </td>
             <td>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Speichern</button>
             </td>
         </tr>
     </table>
 </form>
-<div class="row">
-    <div class="col-7 back">
+        <hr class="mt-4 mb-0">
+    </div>
+<div class="row pt-2">
+    <div class="col-md-8 col-xs-8 px-5">
         <form action="#" th:action="@{/save-lecture/}" th:object="${lecture}" method="post" id="my_form">
             <input type="hidden" id="courseId" name="courseId" th:value="${course.id}" form="my_form">
             <table class="table">
@@ -73,7 +82,7 @@
                     <td th:text="${lecturee.duration}"></td>
                     <td>
                         <a th:href="@{/remove-lecture(idLecture = ${lecturee.id}, idCourse=${course.id})}">
-                            <button   type="button" class="btn btn-danger">Delete
+                            <button   type="button" class="btn btn-danger">Entfernen
                             </button>
                         </a>
                     </td>
@@ -83,10 +92,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <input required minlength="3" maxlength="25" type="text" id="nameLecture" placeholder="Lecture name" th:field="*{lectureName}" form="my_form">
+                        <input required minlength="3" maxlength="25" type="text" id="nameLecture" placeholder="Vorlesung-Name" th:field="*{lectureName}" form="my_form">
                     </td>
                     <td>
-                        <input required minlength="3" maxlength="25" type="text" id="modulName" placeholder="Modul name" th:field="*{modulName}" form="my_form">
+                        <input required minlength="3" maxlength="25" type="text" id="modulName" placeholder="Modul-Name" th:field="*{modulName}" form="my_form">
                     </td>
                     <td>
                         <select required multiple id="lecturersId" name="lecturersId" form="my_form">
@@ -94,38 +103,43 @@
                         </select>
                     </td>
                     <td>
-                        <input required type="number" min="1" id="duration" placeholder="Duration" th:field="*{duration}" form="my_form">
+                        <input required type="number" min="1" id="duration" placeholder="Stunden" th:field="*{duration}" form="my_form">
                     </td>
                     <td>
-                        <button type="submit" class="btn btn-primary" value="value" form="my_form">Submit</button>
+                        <button type="submit" class="btn btn-primary" value="value" form="my_form">Speichern</button>
                     </td>
                 </tr>
             </table>
         </form>
     </div>
-    <div class="col-1 back"></div>
-    <div class="col-4 back">
-        <div class="subtitle">Reihenfolge</div>
+<!--    <div class="col-md-1 col-xs-1"></div>-->
+    <div class="col-md-4 col-xs-4 pe-5">
+        <h5>Planungs-Reihenfolge</h5>
+        <div>
         <form action="#" method="POST" th:action="@{/save-planning-order}" th:object="${planForm}" id="planForm">
             <select required name="semester" placeholder="Semester" >
                 <option th:each="semester : ${course.semesters}" th:text="'Semester '+ ${semester.semesterNumber}" th:value="${semester.id}"></option>
             </select>
-            <div class="page-content page-container" id="page-content">
-                <div class="col-sm-8">
-                    <div class="container-fluid d-flex justify-content-center">
+<!--            <div class="page-content page-container" id="page-content">-->
+<!--                <div class="col-sm-8">-->
+<!--                    <div class="container-fluid d-flex justify-content-center">-->
                         <ul  class="list list-row card container-fluid list-group" id="sortable" data-sortable-id="0" aria-dropeffect="move">
                             <li class="list-item list-group-item" data-id="13" draggable="true" role="option" aria-grabbed="false" style=""  th:each="lecturer : ${lecturersOrder}" th:text="${lecturer.firstName}" th:value="${lecturer.id}">
                             </li>
                         </ul>
-                    </div>
-                </div>
-            </div>
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
             <input name="lecturersOrder" value="" type="hidden" />
             <input name="courseId" th:value="${course.id}" type="hidden" />
-            <input type="submit" class="btn btn-lg submit" name="save" value="SPEICHERN"/>
+            <div class="px-auto pt-2">
+            <input type="submit" class="btn btn-primary " name="save" value="Reihenfolge speichern"/>
+            </div>
         </form>
+        </div>
     </div>
 </div>
+    </div>
 
 <script>
     var $sortableList = $("#sortable");
