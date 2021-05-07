@@ -24,10 +24,6 @@
 </nav> <br/>
 <h1 th:text="${course.courseName}"></h1>
 
-<div th:if="${negativeNumber}">
-    <div class="alert alert-danger">Die Anzahl der Stunde war negativ
-    </div>
-</div>
 <div th:if="${endIsBeforeStart}">
     <div class="alert alert-danger">Start Datum darf nicht gleich oder nach dem End-Datum sein. Bitte erneut eingeben.
     </div>

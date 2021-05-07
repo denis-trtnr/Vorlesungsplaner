@@ -68,19 +68,18 @@ public class courseViewController {
                                     Model model){
 
         RedirectView redirect = new RedirectView("/courseview/" + courseId);
+        lectureService.save(lecture);
 
-        if (lecture.getDuration() < 0) {
-            Boolean negativeNumber = true;
-            redir.addFlashAttribute("negativeNumber",negativeNumber);
-        } else if (lecture.getLectureName().trim().length() <= 0 ||lecture.getModulName().trim().length() <= 0){
+        if (lecture.getLectureName().trim().length() <= 0 ||lecture.getModulName().trim().length() <= 0){
             Boolean stringJustSpace = true;
             redir.addFlashAttribute("stringJustSpace", stringJustSpace);
         } else {
             for (String id:lecturersId) {
-                Optional<Lecturer> lecturer = lecturerService.findOne(Long.parseLong(id));
-                lecturer.ifPresent(lecture::addLecturer);
+                Lecturer lecturer = lecturerService.findOne(Long.parseLong(id)).orElseThrow(RuntimeException::new);
+                lecture.addLecturer(lecturer);
+                lecturerService.update(lecturer);
             }
-            lectureService.save(lecture);
+            lectureService.update(lecture);
             Optional<Course> course = courseService.findOne(Long.parseLong(courseId));
             course.ifPresent(thecourse -> courseService.update(thecourse.addLecture(lecture)));
 
